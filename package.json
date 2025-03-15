@@ -1,0 +1,57 @@
+{
+  "name": "ai-code-generator",
+  "version": "0.0.2",
+  "description": "Автоматизированный генератор кода с использованием OpenRouter API",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavloMakaro/ai-code-generator.git"
+  },
+  "keywords": [
+    "ai",
+    "code-generator",
+    "electron",
+    "openrouter"
+  ],
+  "author": "PavloMakaro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PavloMakaro/ai-code-generator/issues"
+  },
+  "homepage": "https://github.com/PavloMakaro/ai-code-generator#readme",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "electron-store": "^8.1.0",
+    "openai": "^4.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "build": {
+    "appId": "com.pavlomakaro.aicodegenerator",
+    "productName": "AI Code Generator",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+} 

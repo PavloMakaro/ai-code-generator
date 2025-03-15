@@ -1,0 +1,1666 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: transparent;
+  color: #f0f0f0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: rgba(25, 25, 25, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(60, 60, 60, 0.3);
+  -webkit-app-region: drag;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: #ddd;
+  font-weight: 500;
+}
+
+.input-section, .output-section {
+  margin-bottom: 30px;
+}
+
+/* Стили для панели управления окном в стиле macOS */
+.titlebar {
+  -webkit-app-region: drag;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  background-color: rgba(28, 28, 28, 0.7);
+  border-bottom: 1px solid rgba(60, 60, 60, 0.3);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.titlebar-controls {
+  display: flex;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+  margin-right: auto;
+  z-index: 1000;
+}
+
+.titlebar-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  -webkit-app-region: no-drag;
+  z-index: 1001;
+  margin: 0;
+  padding: 0;
+}
+
+.titlebar-button::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  z-index: -1;
+}
+
+.titlebar-button:hover::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+.titlebar-button.close {
+  background-color: #ff5f57;
+}
+
+.titlebar-button.minimize {
+  background-color: #ffbd2e;
+}
+
+.titlebar-button.maximize {
+  background-color: #28c940;
+}
+
+.titlebar-button:hover {
+  filter: brightness(1.1);
+}
+
+.titlebar-button:active {
+  filter: brightness(0.9);
+}
+
+.titlebar-title {
+  flex: 1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Уменьшаем размер кнопки настроек и перемещаем в левый угол */
+.settings-button {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 100;
+  -webkit-app-region: no-drag;
+  transition: all 0.2s;
+  margin-left: 15px;
+}
+
+.settings-button svg {
+  width: 100%;
+  height: 100%;
+  color: rgba(180, 180, 180, 0.8);
+  transition: all 0.3s;
+}
+
+.settings-button:hover svg {
+  color: white;
+  transform: rotate(30deg);
+}
+
+.settings-button:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  top: -35px;
+}
+
+/* Стили для чата */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: 0 20px 20px 20px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 80, 80, 0.7) rgba(30, 30, 30, 0.5);
+  -webkit-overflow-scrolling: touch;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  animation: fadeIn 0.3s ease-out forwards;
+  margin-bottom: 15px;
+  padding: 0;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.message.user {
+  margin-left: 20px;
+  margin-right: 5px;
+  align-self: flex-end;
+}
+
+.message.system {
+  margin-right: 20px;
+  margin-left: 5px;
+  align-self: flex-start;
+}
+
+.message-content {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.message.user .message-content {
+  background-color: rgba(40, 60, 100, 0.7);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message.system .message-content {
+  background-color: rgba(45, 45, 45, 0.8);
+  color: white;
+  border-bottom-left-radius: 4px;
+}
+
+.message-content pre {
+  background-color: rgba(30, 30, 30, 0.9);
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.message-content code {
+  background-color: rgba(30, 30, 30, 0.7);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.message-content a {
+  color: #ccc;
+  text-decoration: underline;
+}
+
+.message-content a:hover {
+  color: #fff;
+}
+
+/* Обновленные стили для блока с кодом */
+.code-display {
+  margin: 10px 20px;
+  background-color: rgba(35, 35, 35, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(60, 60, 60, 0.5);
+  animation: codeBlockAppear 0.4s ease-out forwards;
+  position: relative;
+}
+
+/* Обновленные стили для заголовка кода */
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: rgba(40, 40, 40, 0.7);
+  border-bottom: 1px solid rgba(60, 60, 60, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.code-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ddd;
+  margin: 0;
+}
+
+/* Стили для контейнера кнопок кода */
+.code-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: rgba(40, 40, 40, 0.7);
+  border-bottom: 1px solid rgba(60, 60, 60, 0.5);
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Обновленные стили для кнопок кода */
+.code-run-button, 
+.code-copy-button, 
+.code-save-button, 
+.code-edit-button {
+  background: rgba(50, 50, 50, 0.7);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ddd;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.code-run-button:hover, 
+.code-copy-button:hover, 
+.code-save-button:hover, 
+.code-edit-button:hover {
+  background: rgba(70, 70, 70, 0.9);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.code-run-button:active, 
+.code-copy-button:active, 
+.code-save-button:active, 
+.code-edit-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.code-run-button svg, 
+.code-copy-button svg, 
+.code-save-button svg, 
+.code-edit-button svg {
+  width: 14px;
+  height: 14px;
+  transition: all 0.3s;
+}
+
+.code-run-button {
+  background: rgba(40, 80, 120, 0.7);
+}
+
+.code-run-button:hover {
+  background: rgba(50, 100, 150, 0.9);
+}
+
+.code-save-button {
+  background: rgba(60, 100, 60, 0.7);
+}
+
+.code-save-button:hover {
+  background: rgba(70, 120, 70, 0.9);
+}
+
+/* Убираем позиционирование кнопок внутри блока кода */
+.code-display pre {
+  position: relative;
+  margin: 0;
+  padding: 15px;
+  overflow-x: auto;
+  background-color: rgba(25, 25, 25, 0.7);
+}
+
+/* Обновленные стили для формы ввода */
+.input-area {
+  position: relative;
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+}
+
+.messageBox {
+  display: flex;
+  align-items: center;
+  background-color: rgba(40, 40, 40, 0.7);
+  border-radius: 18px;
+  padding: 8px 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(60, 60, 60, 0.5);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.messageBox:focus-within {
+  border-color: rgba(106, 17, 203, 0.3);
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15);
+  transform: translateY(-2px);
+  background-color: rgba(45, 45, 50, 0.8);
+}
+
+.messageBox:focus-within:before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(circle, rgba(106, 17, 203, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  animation: pulse-gradient 2s infinite;
+}
+
+@keyframes pulse-gradient {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.05;
+  }
+}
+
+/* Стили для обертки кнопок действий */
+.fileUploadWrapper, .actionButtonsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.fileUploadWrapper label, .action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.fileUploadWrapper label:hover, .action-button:hover {
+  background-color: rgba(60, 60, 60, 0.7);
+}
+
+.fileUploadWrapper svg, .action-button svg {
+  width: 20px;
+  height: 20px;
+  color: rgba(180, 180, 180, 0.8);
+  transition: all 0.2s;
+}
+
+.fileUploadWrapper label:hover svg, .action-button:hover svg {
+  color: white;
+  transform: scale(1.1);
+}
+
+.fileUploadWrapper input[type="file"] {
+  display: none;
+}
+
+/* Стили для подсказок */
+.tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(30, 30, 30, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  pointer-events: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.fileUploadWrapper label:hover .tooltip,
+.action-button:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  top: -35px;
+}
+
+/* Стили для поля ввода */
+#prompt-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  padding: 10px 15px;
+  outline: none;
+  min-width: 0;
+  transition: all 0.3s ease;
+}
+
+#prompt-input:focus {
+  transform: scale(1.01);
+}
+
+#prompt-input::placeholder {
+  color: rgba(180, 180, 180, 0.6);
+  transition: all 0.3s ease;
+}
+
+#prompt-input:focus::placeholder {
+  opacity: 0.5;
+  transform: translateX(5px);
+}
+
+/* Стили для кнопки отправки */
+#generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(50, 50, 50, 0.7);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#generate-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#generate-btn:hover {
+  background-color: rgba(70, 70, 70, 0.9);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#generate-btn:hover:before {
+  opacity: 1;
+}
+
+#generate-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#send-icon {
+  width: 20px;
+  height: 20px;
+}
+
+#send-icon svg {
+  width: 100%;
+  height: 100%;
+  color: rgba(180, 180, 180, 0.8);
+  transition: all 0.3s;
+}
+
+#generate-btn:hover #send-icon svg {
+  color: white;
+}
+
+/* Стили для мини-загрузчика */
+.mini-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+/* Стили для формы ввода ошибки */
+.error-input-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#error-input {
+  width: 100%;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(60, 60, 60, 0.5);
+  border-radius: 4px;
+  padding: 10px;
+  color: white;
+  font-size: 14px;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+#error-input:focus {
+  outline: none;
+  border-color: rgba(80, 80, 80, 0.8);
+}
+
+#submit-error-btn, #cancel-error-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#submit-error-btn {
+  background-color: rgba(70, 70, 70, 0.8);
+  color: white;
+  margin-right: 10px;
+}
+
+#submit-error-btn:hover {
+  background-color: rgba(90, 90, 90, 0.9);
+}
+
+#cancel-error-btn {
+  background-color: rgba(50, 50, 50, 0.7);
+  color: #ddd;
+}
+
+#cancel-error-btn:hover {
+  background-color: rgba(70, 70, 70, 0.8);
+}
+
+/* Стили для анимации загрузки */
+.loading-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(20, 20, 20, 0.85);
+  padding: 30px;
+  border-radius: 15px;
+  z-index: 1000;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(80, 80, 80, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.loader {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  margin: 0 auto;
+}
+
+.loader div {
+  width: 8%;
+  height: 24%;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  opacity: 0;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+  animation: fade458 1s linear infinite;
+}
+
+@keyframes fade458 {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.25;
+  }
+}
+
+.loader .bar1 {
+  transform: rotate(0deg) translate(0, -130%);
+  animation-delay: 0s;
+}
+
+.loader .bar2 {
+  transform: rotate(30deg) translate(0, -130%);
+  animation-delay: -1.1s;
+}
+
+.loader .bar3 {
+  transform: rotate(60deg) translate(0, -130%);
+  animation-delay: -1s;
+}
+
+.loader .bar4 {
+  transform: rotate(90deg) translate(0, -130%);
+  animation-delay: -0.9s;
+}
+
+.loader .bar5 {
+  transform: rotate(120deg) translate(0, -130%);
+  animation-delay: -0.8s;
+}
+
+.loader .bar6 {
+  transform: rotate(150deg) translate(0, -130%);
+  animation-delay: -0.7s;
+}
+
+.loader .bar7 {
+  transform: rotate(180deg) translate(0, -130%);
+  animation-delay: -0.6s;
+}
+
+.loader .bar8 {
+  transform: rotate(210deg) translate(0, -130%);
+  animation-delay: -0.5s;
+}
+
+.loader .bar9 {
+  transform: rotate(240deg) translate(0, -130%);
+  animation-delay: -0.4s;
+}
+
+.loader .bar10 {
+  transform: rotate(270deg) translate(0, -130%);
+  animation-delay: -0.3s;
+}
+
+.loader .bar11 {
+  transform: rotate(300deg) translate(0, -130%);
+  animation-delay: -0.2s;
+}
+
+.loader .bar12 {
+  transform: rotate(330deg) translate(0, -130%);
+  animation-delay: -0.1s;
+}
+
+.loading-text {
+  margin-top: 20px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Обновленные стили для мини-лоадера */
+.mini-loader {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.mini-loader div {
+  width: 8%;
+  height: 24%;
+  background: rgb(180, 180, 180);
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  opacity: 0;
+  border-radius: 50px;
+  animation: fade458 1s linear infinite;
+}
+
+.mini-loader .bar1 {
+  transform: rotate(0deg) translate(0, -130%);
+  animation-delay: 0s;
+}
+
+.mini-loader .bar2 {
+  transform: rotate(30deg) translate(0, -130%);
+  animation-delay: -1.1s;
+}
+
+.mini-loader .bar3 {
+  transform: rotate(60deg) translate(0, -130%);
+  animation-delay: -1s;
+}
+
+.mini-loader .bar4 {
+  transform: rotate(90deg) translate(0, -130%);
+  animation-delay: -0.9s;
+}
+
+.mini-loader .bar5 {
+  transform: rotate(120deg) translate(0, -130%);
+  animation-delay: -0.8s;
+}
+
+.mini-loader .bar6 {
+  transform: rotate(150deg) translate(0, -130%);
+  animation-delay: -0.7s;
+}
+
+.mini-loader .bar7 {
+  transform: rotate(180deg) translate(0, -130%);
+  animation-delay: -0.6s;
+}
+
+.mini-loader .bar8 {
+  transform: rotate(210deg) translate(0, -130%);
+  animation-delay: -0.5s;
+}
+
+.mini-loader .bar9 {
+  transform: rotate(240deg) translate(0, -130%);
+  animation-delay: -0.4s;
+}
+
+.mini-loader .bar10 {
+  transform: rotate(270deg) translate(0, -130%);
+  animation-delay: -0.3s;
+}
+
+.mini-loader .bar11 {
+  transform: rotate(300deg) translate(0, -130%);
+  animation-delay: -0.2s;
+}
+
+.mini-loader .bar12 {
+  transform: rotate(330deg) translate(0, -130%);
+  animation-delay: -0.1s;
+}
+
+/* Кнопка запуска кода */
+.run-code-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: rgba(60, 120, 60, 0.7);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.run-code-btn:hover {
+  background-color: rgba(70, 140, 70, 0.9);
+}
+
+.run-code-btn:active {
+  transform: scale(0.98);
+}
+
+.run-code-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Анимация для запуска кода */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.run-animation {
+  animation: pulse 0.5s ease;
+}
+
+.status-bar {
+  padding: 10px;
+  text-align: center;
+  min-height: 40px;
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+.status-success {
+  color: #aaa;
+}
+
+.status-error {
+  color: #e74c3c;
+}
+
+.status-loading {
+  color: #aaa;
+}
+
+#copy-btn, #fix-btn {
+  margin-right: 10px;
+  background-color: rgba(50, 50, 50, 0.7);
+}
+
+#copy-btn:hover, #fix-btn:hover {
+  background-color: rgba(70, 70, 70, 0.9);
+}
+
+/* Стили для модального окна настроек */
+.settings-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: rgba(35, 35, 35, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(80, 80, 80, 0.3);
+  display: none;
+}
+
+.settings-modal.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.close-settings {
+  background: transparent;
+  border: none;
+  color: rgba(180, 180, 180, 0.8);
+  cursor: pointer;
+  font-size: 20px;
+  transition: color 0.2s;
+}
+
+.close-settings:hover {
+  color: white;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-group label {
+  font-size: 14px;
+  color: rgba(220, 220, 220, 0.9);
+}
+
+.settings-group select {
+  background-color: rgba(50, 50, 50, 0.8);
+  border: 1px solid rgba(80, 80, 80, 0.5);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.settings-group select:focus {
+  border-color: rgba(100, 100, 100, 0.8);
+  box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.3);
+}
+
+.settings-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.settings-footer button {
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-settings {
+  background-color: rgba(70, 70, 70, 0.9);
+  color: white;
+}
+
+.save-settings:hover {
+  background-color: rgba(90, 90, 90, 1);
+}
+
+.cancel-settings {
+  background-color: rgba(50, 50, 50, 0.7);
+  color: rgba(220, 220, 220, 0.9);
+}
+
+.cancel-settings:hover {
+  background-color: rgba(70, 70, 70, 0.8);
+}
+
+/* Анимация для модального окна */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -48%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Затемнение фона при открытии модального окна */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 999;
+  display: none;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+/* Стилизация полосы прокрутки */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 30, 30, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(80, 80, 80, 0.7);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.9);
+}
+
+/* Стилизация полосы прокрутки для Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 80, 80, 0.7) rgba(30, 30, 30, 0.5);
+}
+
+.model-info {
+  margin-top: 5px;
+  font-size: 12px;
+  color: rgba(180, 180, 180, 0.8);
+  font-style: italic;
+}
+
+/* Улучшенные стили для кнопок кода */
+.code-run-button, 
+.code-copy-button, 
+.code-save-button, 
+.code-edit-button {
+  background: rgba(50, 50, 50, 0.7);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ddd;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.code-run-button:hover, 
+.code-copy-button:hover, 
+.code-save-button:hover, 
+.code-edit-button:hover {
+  background: rgba(70, 70, 70, 0.9);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.code-run-button:active, 
+.code-copy-button:active, 
+.code-save-button:active, 
+.code-edit-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.code-run-button svg, 
+.code-copy-button svg, 
+.code-save-button svg, 
+.code-edit-button svg {
+  width: 16px;
+  height: 16px;
+  transition: all 0.3s;
+}
+
+.code-run-button {
+  background: rgba(40, 80, 120, 0.7);
+}
+
+.code-run-button:hover {
+  background: rgba(50, 100, 150, 0.9);
+}
+
+.code-save-button {
+  background: rgba(60, 100, 60, 0.7);
+}
+
+.code-save-button:hover {
+  background: rgba(70, 120, 70, 0.9);
+}
+
+/* Улучшенные анимации для всего приложения */
+
+/* Анимация для появления сообщений */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Анимация для кнопок */
+@keyframes buttonPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.code-run-button:hover,
+.code-copy-button:hover,
+.code-save-button:hover,
+.code-edit-button:hover {
+  animation: buttonPulse 1.5s infinite;
+}
+
+/* Анимация для блоков кода */
+@keyframes codeBlockAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.code-display {
+  animation: codeBlockAppear 0.4s ease-out forwards;
+}
+
+/* Анимация для результатов выполнения кода */
+@keyframes resultAppear {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.code-result, .error-block {
+  animation: resultAppear 0.5s ease-out forwards;
+  overflow: hidden;
+}
+
+/* Улучшенная анимация для кнопки отправки */
+@keyframes sendButtonPulse {
+  0% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.1); }
+  100% { transform: translateY(-50%) scale(1); }
+}
+
+#generate-btn:hover #send-icon svg {
+  animation: sendButtonPulse 1.5s infinite;
+}
+
+/* Анимация для уведомлений */
+@keyframes notificationSlide {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { transform: translateY(0); opacity: 1; }
+  90% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+
+.copy-notification {
+  animation: notificationSlide 3s forwards;
+}
+
+/* Анимация для загрузки контейнера */
+@keyframes containerPulse {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.02); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.loading-container {
+  animation: containerPulse 2s infinite;
+}
+
+/* Эффект перехода для всех элементов */
+* {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Эффект наведения для всех кнопок */
+button {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для кнопок действий при загрузке */
+.action-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.action-hidden {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+/* Стили для контейнера кнопок */
+.input-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 10px;
+}
+
+/* Стиль загрузки в стиле macOS */
+.macos-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.macos-loader.action-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.macos-loader .spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top-color: rgba(180, 180, 180, 0.8);
+  border-left-color: rgba(180, 180, 180, 0.8);
+  border-radius: 50%;
+  animation: macos-spin 1s linear infinite;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes macos-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Стили для результатов установки пакетов */
+.package-install-result {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.package-install-success {
+  background-color: rgba(40, 100, 40, 0.2);
+  border-left: 3px solid rgba(40, 180, 40, 0.7);
+}
+
+.package-install-error {
+  background-color: rgba(100, 40, 40, 0.2);
+  border-left: 3px solid rgba(180, 40, 40, 0.7);
+}
+
+/* Добавляем класс для пульсации при загрузке */
+.loading-pulse {
+  animation: loading-pulse 2s infinite;
+}
+
+@keyframes loading-pulse {
+  0% {
+    border-color: rgba(106, 17, 203, 0.2);
+  }
+  50% {
+    border-color: rgba(106, 17, 203, 0.5);
+  }
+  100% {
+    border-color: rgba(106, 17, 203, 0.2);
+  }
+}
+
+/* Стили для кнопки голосового ввода */
+.action-button.recording {
+  background-color: rgba(220, 50, 50, 0.8);
+  animation: pulse-recording 1.5s infinite;
+}
+
+.action-button.recording svg {
+  color: white;
+}
+
+/* Улучшенные стили для индикатора записи */
+.recording-indicator {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background-color: rgba(40, 40, 40, 0.95);
+  border-radius: 20px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  min-width: 250px;
+  max-width: 80%;
+  backdrop-filter: blur(5px);
+  border-left: 4px solid #e74c3c;
+}
+
+.recording-text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  overflow: hidden;
+}
+
+.recording-label {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.recording-transcript {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 16px;
+}
+
+.recording-pulse {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #e74c3c;
+  animation: recording-pulse 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes recording-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+    box-shadow: 0 0 0 5px rgba(231, 76, 60, 0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+
+/* Стили для всплывающей подсказки */
+.custom-tooltip {
+  position: absolute;
+  background-color: rgba(30, 30, 30, 0.95);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
+.custom-tooltip:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(30, 30, 30, 0.95);
+}
+
+/* Обновляем стили для уведомлений */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background-color: rgba(40, 40, 40, 0.95);
+  color: white;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  max-width: 350px;
+  word-wrap: break-word;
+  backdrop-filter: blur(5px);
+}
+
+.notification.info {
+  border-left: 4px solid #3498db;
+}
+
+.notification.success {
+  border-left: 4px solid #2ecc71;
+}
+
+.notification.warning {
+  border-left: 4px solid #f39c12;
+}
+
+.notification.error {
+  border-left: 4px solid #e74c3c;
+}
+
+/* Стили для подсказки по установке модулей */
+.pip-install-help {
+  background-color: rgba(40, 40, 40, 0.95);
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  border-left: 4px solid #3498db;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pip-install-help h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #3498db;
+}
+
+.pip-install-help code {
+  background-color: rgba(60, 60, 60, 0.7);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.pip-install-help ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.pip-install-help li {
+  margin-bottom: 5px;
+}
+
+/* Стили для поля API ключа */
+.api-key-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.api-key-container input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password svg {
+  width: 18px;
+  height: 18px;
+  color: rgba(180, 180, 180, 0.8);
+}
+
+.toggle-password:hover svg {
+  color: white;
+}
+
+.api-key-info {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.api-key-info p {
+  margin: 0 0 5px 0;
+  color: rgba(200, 200, 200, 0.8);
+}
+
+.api-key-info a {
+  color: #3498db;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.api-key-info a:hover {
+  text-decoration: underline;
+}
+
+/* Стили для кнопки проверки API */
+.test-api-btn {
+  background-color: rgba(52, 152, 219, 0.7);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.test-api-btn:hover {
+  background-color: rgba(52, 152, 219, 0.9);
+}
+
+/* Стили для индикатора необходимости настройки API ключа */
+.needs-attention {
+  position: relative;
+}
+
+.needs-attention::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: #e74c3c;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.8; }
+}
+
+/* Стили для обязательного поля */
+.required-field {
+  color: #e74c3c;
+  margin-left: 3px;
+}
+
+/* Отключаем перетаскивание для внутренних элементов */
+.chat-container, .messages, .input-area, .messageBox, button, input, textarea, select {
+  -webkit-app-region: no-drag;
+} 

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Генератор Кода</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="transparent-bg">
+  <div class="container">
+    <!-- Панель управления окном в стиле macOS -->
+    <div class="titlebar">
+      <div class="titlebar-controls">
+        <button id="close-btn" class="titlebar-button close" onclick="window.windowControls.close()"></button>
+        <button id="minimize-btn" class="titlebar-button minimize" onclick="window.windowControls.minimize()"></button>
+        <button id="maximize-btn" class="titlebar-button maximize" onclick="window.windowControls.maximize()"></button>
+      </div>
+      
+      <div class="titlebar-title">AI Генератор Кода</div>
+      
+      <!-- Кнопка настроек (перемещена в правый угол) -->
+      <button id="settings-btn" class="settings-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="chat-container">
+      <div class="messages" id="messages">
+        <div class="message system">
+          <div class="message-content">
+            <p>Привет! Я AI генератор кода. Опишите, какой код вы хотите создать, и я помогу вам.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Анимация загрузки -->
+      <div class="loading-container" id="loading-container" style="display: none;">
+        <div class="loader">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          <div class="bar4"></div>
+          <div class="bar5"></div>
+          <div class="bar6"></div>
+          <div class="bar7"></div>
+          <div class="bar8"></div>
+          <div class="bar9"></div>
+          <div class="bar10"></div>
+          <div class="bar11"></div>
+          <div class="bar12"></div>
+        </div>
+        <div class="loading-text">Генерация кода...</div>
+      </div>
+      
+      <!-- Форма ввода сообщения -->
+      <div class="input-area">
+        <div class="messageBox">
+          <div class="fileUploadWrapper">
+            <label for="file">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
+                <circle stroke-width="20" stroke="#6c6c6c" fill="none" r="158.5" cy="168.5" cx="168.5"></circle>
+                <path stroke-linecap="round" stroke-width="25" stroke="#6c6c6c" d="M167.759 79V259"></path>
+                <path stroke-linecap="round" stroke-width="25" stroke="#6c6c6c" d="M79 167.138H259"></path>
+              </svg>
+              <span class="tooltip">Добавить файл</span>
+            </label>
+            <input type="file" id="file" name="file" />
+          </div>
+          <input 
+            required="" 
+            placeholder="Опишите код или задайте вопрос..." 
+            type="text" 
+            id="prompt-input" 
+            onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); if(this.value.trim() !== '') document.getElementById('generate-btn').click(); }"
+          />
+          <div class="input-actions">
+            <div id="loading-indicator" class="macos-loader">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="actionButtonsWrapper action-visible" id="voice-input-wrapper">
+            <button id="voice-input-btn" class="action-button" title="Голосовой ввод (русский)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Поле для ввода сообщения об ошибке -->
+        <div class="error-input-container" id="error-input-container" style="display: none;">
+          <textarea id="error-input" rows="3" placeholder="Опишите ошибку, которую нужно исправить..."></textarea>
+          <button id="submit-error-btn">Исправить</button>
+          <button id="cancel-error-btn">Отмена</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Модальное окно настроек -->
+  <div class="modal-overlay" id="modal-overlay"></div>
+  <div class="settings-modal" id="settings-modal">
+    <div class="settings-header">
+      <h2>Настройки</h2>
+      <button class="close-settings" id="close-settings">×</button>
+    </div>
+    <div class="settings-content">
+      <div class="settings-group">
+        <label for="model-select">Модель AI</label>
+        <select id="model-select">
+          <!-- Модели Claude -->
+          <option value="anthropic/claude-3-opus-20240229:free">Claude 3 Opus (200K)</option>
+          <option value="anthropic/claude-3-sonnet-20240229:free">Claude 3 Sonnet (200K)</option>
+          <option value="anthropic/claude-3-haiku-20240307:free">Claude 3 Haiku (200K)</option>
+          
+          <!-- Модели Google -->
+          <option value="google/gemini-2.0-pro-exp-02-05:free">Gemini 2.0 Pro (32K)</option>
+          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (32K)</option>
+          <option value="google/gemini-2.0-flash-thinking-exp-1219:free">Gemini 2.0 Flash Thinking (32K)</option>
+          <option value="google/gemini-2.0-flash-lite-preview-02-05:free">Gemini 2.0 Flash Lite (32K)</option>
+          
+          <!-- Модели Meta -->
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (128K)</option>
+          
+          <!-- Модели Mistral -->
+          <option value="mistralai/mistral-small-24b-instruct-2501:free">Mistral Small 24B (32K)</option>
+          
+          <!-- Модели DeepSeek -->
+          <option value="deepseek/deepseek-r1:free">DeepSeek R1 (32K)</option>
+          <option value="deepseek/deepseek-chat:free">DeepSeek Chat (32K)</option>
+        </select>
+        <div class="model-info" id="model-info">Выберите модель AI</div>
+      </div>
+      <div class="settings-group">
+        <label for="theme-select">Тема интерфейса</label>
+        <select id="theme-select">
+          <option value="dark" selected>Темная</option>
+          <option value="light">Светлая</option>
+          <option value="system">Системная</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="api-key-input">API ключ OpenRouter <span class="required-field">*</span></label>
+        <div class="api-key-container">
+          <input type="password" id="api-key-input" placeholder="Введите ваш API ключ OpenRouter" />
+          <button id="toggle-api-key" class="toggle-password">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="api-key-info">
+          <p>Для работы приложения необходим API ключ OpenRouter.</p>
+          <a href="https://openrouter.ai/keys" target="_blank">Получить бесплатный API ключ</a>
+        </div>
+      </div>
+    </div>
+    <div class="settings-footer">
+      <button class="cancel-settings" id="cancel-settings">Отмена</button>
+      <button class="save-settings" id="save-settings">Сохранить</button>
+    </div>
+  </div>
+  
+  <!-- Добавляем после блока с ошибкой -->
+  <div class="pip-install-help">
+    <h4>Как установить Python-модули</h4>
+    <p>Для установки модулей Python используйте команду в отдельном блоке кода с типом <code>command</code>:</p>
+    <pre><code>pip install имя_пакета</code></pre>
+    <p>Если возникают проблемы, попробуйте:</p>
+    <ul>
+      <li>Использовать <code>pip3</code> вместо <code>pip</code></li>
+      <li>Добавить флаг <code>--user</code>: <code>pip install --user имя_пакета</code></li>
+      <li>Запустить командную строку от имени администратора</li>
+    </ul>
+  </div>
+  
+  <script src="renderer.js"></script>
+</body>
+</html> 
