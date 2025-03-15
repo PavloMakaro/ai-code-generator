@@ -3,8 +3,8 @@
 🚀 Приложение для **автоматизированной генерации кода** с использованием **OpenRouter API** и передовых моделей искусственного интеллекта! 🧠
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/41d91607-ab60-4ee5-ba5b-f92fe6ec5240" alt="Скриншот интерфейса генерации кода" width="600">
-  <img src="https://github.com/user-attachments/assets/b87ed4c8-9ecf-41a6-a5bd-9775a7a7dcbb" alt="Скриншот настроек приложения" width="600">
+  <img src="https://github.com/user-attachments/assets/41d91607-ab60-4ee5-ba5b-f92fe6ec5240" alt="Скриншот интерфейса генерации кода" width="400" style="margin: 10px;">
+  <img src="https://github.com/user-attachments/assets/b87ed4c8-9ecf-41a6-a5bd-9775a7a7dcbb" alt="Скриншот настроек приложения" width="400" style="margin: 10px;">
 </div>
 
 ## 💡 Возможности
@@ -21,19 +21,19 @@
 ### Генерация кода
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/example-code-generation.png" alt="Пример генерации кода" width="600">
+  <img src="https://github.com/user-attachments/assets/example-code-generation.png" alt="Пример генерации кода" width="400" style="margin: 10px;">
 </div>
 
 ### Исправление ошибок
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/example-error-fixing.png" alt="Пример исправления ошибок" width="600">
+  <img src="https://github.com/user-attachments/assets/example-error-fixing.png" alt="Пример исправления ошибок" width="400" style="margin: 10px;">
 </div>
 
 ### Настройки приложения
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/example-settings.png" alt="Пример настроек приложения" width="600">
+  <img src="https://github.com/user-attachments/assets/example-settings.png" alt="Пример настроек приложения" width="400" style="margin: 10px;">
 </div>
 
 ## 🛠️ Установка
