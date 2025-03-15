@@ -2,8 +2,7 @@
 
 Приложение для автоматизированной генерации кода с использованием OpenRouter API и различных моделей искусственного интеллекта.
 
-![Скриншот приложения](![image](https://github.com/user-attachments/assets/3af1f31e-e288-4a13-94a6-99cf17555e10)
-)
+![image](https://github.com/user-attachments/assets/41d91607-ab60-4ee5-ba5b-f92fe6ec5240)
 
 ## Возможности
 
