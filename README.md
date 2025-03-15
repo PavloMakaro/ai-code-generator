@@ -1,8 +1,17 @@
 # AI Генератор Кода
 
 Приложение для автоматизированной генерации кода с использованием OpenRouter API и различных моделей искусственного интеллекта.
+<table>
+  <tr>
+    <td>
+      <img src="[images/image1.png](https://github.com/user-attachments/assets/41d91607-ab60-4ee5-ba5b-f92fe6ec5240)" alt="Первое изображение" width="400">
+    </td>
+    <td>
+      <img src="[images/image2.png](https://github.com/user-attachments/assets/b87ed4c8-9ecf-41a6-a5bd-9775a7a7dcbb)" alt="Второе изображение" width="400">
+    </td>
+  </tr>
+</table>
 
-![image](https://github.com/user-attachments/assets/41d91607-ab60-4ee5-ba5b-f92fe6ec5240)![image](https://github.com/user-attachments/assets/b87ed4c8-9ecf-41a6-a5bd-9775a7a7dcbb)
 
 
 ## Возможности
