@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- Адаптация для мобильных и запрет масштабирования -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🍕 Pizza Clicker Empire 🍕</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Скрипт Telegram Web App (ВАЖНО: перед вашим JS) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Стили -->
+    <link rel="stylesheet" href="style.css">
+    <!-- CountUp.js (для анимации счета) -->
+    <script src="https://cdn.jsdelivr.net/npm/countup.js@2.0.8/dist/countUp.umd.js"></script>
+</head>
+<body>
+    <!-- Аудио элементы (пути должны быть относительными) -->
+    <audio id="click-sound" src="sounds/click.wav" preload="auto"></audio>
+    <audio id="buy-sound" src="sounds/buy.wav" preload="auto"></audio>
+    <audio id="achievement-sound" src="sounds/achievement.wav" preload="auto"></audio>
+    <audio id="golden-pizza-sound" src="sounds/golden.wav" preload="auto"></audio>
+    <!-- Убедитесь, что файлы существуют в папке /sounds/ -->
+
+    <div class="game-wrapper">
+        <!-- Левая колонка: Кликер -->
+        <div class="column clicker-column">
+            <div class="panel score-panel">
+                <p id="user-greeting" class="user-greeting"></p> <!-- Для приветствия -->
+                <h1>Pizza Empire</h1>
+                <div class="score-display">
+                    <span id="score">0</span> 🍕
+                </div>
+                <div class="stats-display">
+                    <small title="Пицц, получаемых за один клик">Клик: <span id="ppc">1</span></small>
+                    <small title="Пицц, получаемых автоматически каждую секунду">В сек: <span id="pps">0</span></small>
+                </div>
+            </div>
+
+            <div class="panel pizza-panel">
+                <div id="interactive-area">
+                    <div id="pizza-container">
+                        <button id="pizza-button" class="pizza">🍕</button>
+                        <!-- Частицы пиццы -->
+                    </div>
+                    <!-- Золотая пицца -->
+                </div>
+            </div>
+             <button id="reset-button" class="reset-btn" title="Сбросить весь прогресс и начать заново">Сбросить Прогресс</button>
+        </div>
+
+        <!-- Правая колонка: Улучшения и Достижения -->
+        <div class="column side-column">
+            <div class="panel upgrades-panel">
+                <h2>Улучшения</h2>
+                <div id="upgrades-list">
+                    <!-- Улучшения -->
+                </div>
+            </div>
+            <div class="panel achievements-panel">
+                <h2>Достижения <span id="achievement-count">(0/0)</span></h2>
+                <div id="achievements-list">
+                    <!-- Достижения -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление о достижении -->
+    <div id="achievement-toast" class="achievement-toast">
+        <span class="toast-icon">🏆</span>
+        <span class="toast-message">Достижение получено!</span>
+    </div>
+
+    <!-- Ваш основной скрипт (ПОСЛЕ скрипта Telegram) -->
+    <script src="script.js"></script>
+</body>
+</html>
