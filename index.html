@@ -2,79 +2,184 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- Адаптация для мобильных и запрет масштабирования -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🍕 Pizza Clicker Empire 🍕</title>
-    <!-- Google Fonts -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Crypto Baron Mini V2</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
-    <!-- Скрипт Telegram Web App (ВАЖНО: перед вашим JS) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Стили -->
-    <link rel="stylesheet" href="style.css">
-    <!-- CountUp.js (для анимации счета) -->
-    <script src="https://cdn.jsdelivr.net/npm/countup.js@2.0.8/dist/countUp.umd.js"></script>
 </head>
 <body>
-    <!-- Аудио элементы (пути должны быть относительными) -->
-    <audio id="click-sound" src="sounds/click.wav" preload="auto"></audio>
-    <audio id="buy-sound" src="sounds/buy.wav" preload="auto"></audio>
-    <audio id="achievement-sound" src="sounds/achievement.wav" preload="auto"></audio>
-    <audio id="golden-pizza-sound" src="sounds/golden.wav" preload="auto"></audio>
-    <!-- Убедитесь, что файлы существуют в папке /sounds/ -->
-
-    <div class="game-wrapper">
-        <!-- Левая колонка: Кликер -->
-        <div class="column clicker-column">
-            <div class="panel score-panel">
-                <p id="user-greeting" class="user-greeting"></p> <!-- Для приветствия -->
-                <h1>Pizza Empire</h1>
-                <div class="score-display">
-                    <span id="score">0</span> 🍕
-                </div>
-                <div class="stats-display">
-                    <small title="Пицц, получаемых за один клик">Клик: <span id="ppc">1</span></small>
-                    <small title="Пицц, получаемых автоматически каждую секунду">В сек: <span id="pps">0</span></small>
-                </div>
+    <div class="app">
+        <!-- Верхняя панель: Статус -->
+        <header class="status-bar">
+            <div class="status-item balance">
+                <span class="icon">💰</span> <span id="player-balance">0</span> <span class="currency-name">BitCoinz</span>
             </div>
+            <div class="status-item hashrate">
+                <span class="icon">⚡️</span> <span id="total-hashrate">0</span> H/s (<span id="mining-target-crypto">---</span>)
+            </div>
+            <div class="status-item power">
+                <span class="icon">🔌</span> <span id="total-power">0</span> W (<span id="power-cost">0</span>💰/ч)
+            </div>
+            <div class="status-item user-info">
+                <span class="icon">👤</span> <span id="user-name">User</span>
+            </div>
+        </header>
 
-            <div class="panel pizza-panel">
-                <div id="interactive-area">
-                    <div id="pizza-container">
-                        <button id="pizza-button" class="pizza">🍕</button>
-                        <!-- Частицы пиццы -->
+        <!-- Основная область: Контент -->
+        <main class="content">
+            <!-- Экран: Ферма -->
+            <section id="screen-main" class="screen active">
+                <h2>Моя Ферма</h2>
+                <div class="farm-controls">
+                    <label for="mining-select">Майнить:</label>
+                    <select id="mining-select">
+                        <!-- Опции криптовалют добавятся JS -->
+                    </select>
+                </div>
+                <div class="farm-overview">
+                    <div class="farm-component-slot" id="motherboard-slot">
+                        <span class="slot-label">Мат. плата:</span>
+                        <div class="slot empty">Нет платы</div>
                     </div>
-                    <!-- Золотая пицца -->
+                    <div class="farm-component-slot" id="psu-slot">
+                         <span class="slot-label">Блок Питания:</span>
+                         <div class="slot empty">Нет БП</div>
+                    </div>
+                     <div class="farm-component-slot" id="cooling-slots-container">
+                         <span class="slot-label">Охлаждение:</span>
+                         <div id="cooling-slots" class="cooling-slots-grid">
+                            <!-- Слоты охлаждения добавятся JS -->
+                            <div class="slot cooling-slot empty">Slot 1</div>
+                            <div class="slot cooling-slot empty">Slot 2</div>
+                         </div>
+                    </div>
                 </div>
-            </div>
-             <button id="reset-button" class="reset-btn" title="Сбросить весь прогресс и начать заново">Сбросить Прогресс</button>
-        </div>
 
-        <!-- Правая колонка: Улучшения и Достижения -->
-        <div class="column side-column">
-            <div class="panel upgrades-panel">
-                <h2>Улучшения</h2>
-                <div id="upgrades-list">
-                    <!-- Улучшения -->
+                <h3 class="gpu-slots-header">Слоты GPU (<span id="gpu-slot-count">0/0</span>)</h3>
+                <div id="rig-gpu-slots" class="rig-slots-container">
+                    <p class="placeholder-text">Установите материнскую плату...</p>
                 </div>
-            </div>
-            <div class="panel achievements-panel">
-                <h2>Достижения <span id="achievement-count">(0/0)</span></h2>
-                <div id="achievements-list">
-                    <!-- Достижения -->
+            </section>
+
+             <!-- Экран: Биржа -->
+             <section id="screen-exchange" class="screen">
+                <h2>Биржа Криптовалют</h2>
+                <div id="crypto-holdings">
+                    <h3>Ваши Активы:</h3>
+                    <ul id="crypto-balances-list">
+                        <!-- Балансы криптовалют -->
+                         <li>Загрузка...</li>
+                    </ul>
                 </div>
-            </div>
-        </div>
+                 <hr>
+                 <div id="crypto-market-prices">
+                     <h3>Рыночные Курсы (за 1 ед.):</h3>
+                     <table id="crypto-prices-table">
+                         <thead>
+                             <tr><th>Монета</th><th>Курс (💰)</th><th>Изм.</th><th>Продать</th></tr>
+                         </thead>
+                         <tbody>
+                             <!-- Курсы криптовалют -->
+                             <tr><td colspan="4">Загрузка...</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+             </section>
+
+            <!-- Экран: Магазин -->
+            <section id="screen-shop" class="screen">
+                <h2>Магазин Комплектующих</h2>
+                <div id="shop-items" class="item-grid"></div>
+            </section>
+
+            <!-- Экран: Рынок Б/У -->
+            <section id="screen-market" class="screen">
+                 <h2>Рынок Б/У</h2>
+                 <div class="market-tabs">
+                     <button class="tab-button active" data-market-tab="buy">Купить</button>
+                     <button class="tab-button" data-market-tab="sell">Мои лоты / Продать</button>
+                 </div>
+                 <div id="market-items-buy" class="item-grid market-tab-content active"></div>
+                 <div id="market-items-sell" class="market-tab-content">
+                     <h3>Мои лоты:</h3>
+                     <div id="my-market-listings" class="item-grid"><p class="placeholder-text">Нет лотов.</p></div>
+                     <hr>
+                     <h3>Инвентарь для продажи:</h3>
+                     <div id="inventory-for-sale" class="item-grid"><p class="placeholder-text">Инвентарь пуст.</p></div>
+                 </div>
+             </section>
+
+            <!-- Экран: Инвентарь -->
+            <section id="screen-inventory" class="screen">
+                <h2>Инвентарь</h2>
+                <div id="inventory-items" class="item-grid"><p class="placeholder-text">Инвентарь пуст.</p></div>
+            </section>
+
+             <!-- Экран: Улучшения/Исследования (Placeholder) -->
+            <section id="screen-research" class="screen">
+                <h2>Исследования</h2>
+                <p class="placeholder-text">Раздел исследований и улучшений появится в будущих обновлениях.</p>
+                <!-- <div id="research-tree"></div> -->
+            </section>
+
+        </main>
+
+        <!-- Нижняя панель: Навигация -->
+        <nav class="navigation">
+            <button class="nav-button active" data-screen="main">🏠 Ферма</button>
+            <button class="nav-button" data-screen="exchange">📈 Биржа</button> <!-- Новая кнопка -->
+            <button class="nav-button" data-screen="shop">🛒 Магазин</button>
+            <button class="nav-button" data-screen="market">♻️ Рынок Б/У</button>
+            <button class="nav-button" data-screen="inventory">🎒 Инвентарь</button>
+            <button class="nav-button" data-screen="research">🔬 Исслед.</button> <!-- Новая кнопка -->
+        </nav>
     </div>
 
-    <!-- Уведомление о достижении -->
-    <div id="achievement-toast" class="achievement-toast">
-        <span class="toast-icon">🏆</span>
-        <span class="toast-message">Достижение получено!</span>
-    </div>
+     <!-- Шаблон для карточки компонента -->
+     <template id="component-card-template">
+         <div class="item-card">
+             <img src="placeholder.png" alt="" class="item-image">
+             <h3 class="item-name">Название</h3>
+             <div class="item-stats"></div>
+             <div class="item-wear" style="display: none;">Износ: <span class="wear-value">0</span>%</div>
+             <div class="item-price" style="display: none;">💰 <span class="price-value">0</span></div>
+             <div class="item-actions"></div>
+         </div>
+     </template>
 
-    <!-- Ваш основной скрипт (ПОСЛЕ скрипта Telegram) -->
+     <!-- Модальное окно продажи на рынке -->
+     <div id="sell-modal" class="modal">
+         <div class="modal-content">
+             <span class="close-button">×</span>
+             <h4>Цена продажи на Рынке Б/У</h4>
+             <p>Предмет: <span id="sell-item-name"></span></p>
+             <label for="sell-price-input">Цена (BitCoinz):</label>
+             <input type="number" id="sell-price-input" min="1">
+             <button id="confirm-sell-button" class="action-button">Выставить</button>
+         </div>
+     </div>
+
+    <!-- Модальное окно продажи крипты -->
+     <div id="sell-crypto-modal" class="modal">
+         <div class="modal-content">
+             <span class="close-button">×</span>
+             <h4>Продажа Криптовалюты</h4>
+             <p>Монета: <span id="sell-crypto-name"></span></p>
+             <p>Доступно: <span id="sell-crypto-available"></span></p>
+             <p>Текущий курс: 💰<span id="sell-crypto-rate"></span></p>
+             <label for="sell-crypto-amount-input">Количество для продажи:</label>
+             <input type="number" id="sell-crypto-amount-input" min="0" step="any">
+             <p>Выручка: 💰<span id="sell-crypto-revenue">0</span></p>
+             <button id="confirm-sell-crypto-button" class="action-button">Продать</button>
+         </div>
+     </div>
+
+      <!-- Toast Notifications Container -->
+      <div id="toast-container"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
