@@ -1,847 +1,447 @@
-/* style.css */
-
-/* --- 1. Глобальные переменные и Сброс --- */
+/* --- Базовые Стили и Сброс --- */
 :root {
-    /* Основная палитра (Светлая тема по умолчанию) */
-    --bg-primary: #f4f7f6;        /* Основной фон приложения */
-    --bg-secondary: #ffffff;      /* Фон секций, карточек */
-    --bg-header: #2c3e50;         /* Фон хедера */
-    --bg-nav-active: #34495e;      /* Фон активной кнопки навигации */
-    --bg-card-header: #f8f9fa;    /* Фон заголовков карточек (чуть сероватый) */
-    --bg-input: #ffffff;          /* Фон полей ввода */
-    --bg-hover-light: #e9ecef;    /* Легкий фон при наведении */
-    --bg-disabled: #e9ecef;       /* Фон неактивных элементов */
+    /* Цветовая палитра (Темная тема) */
+    --bg-color-dark: #1c1c1e;       /* Основной фон */
+    --bg-color-medium: #2c2c2e;    /* Фон контейнеров */
+    --bg-color-light: #3a3a3c;     /* Фон элементов ввода, кнопок */
+    --text-color-primary: #f2f2f7;   /* Основной текст */
+    --text-color-secondary: #a0a0a5; /* Вторичный текст, подсказки */
+    --accent-color-primary: #0a84ff; /* Акцентный (синий) */
+    --accent-color-secondary: #5e5ce6; /* Акцентный (фиолетовый) */
+    --color-success: #30d158;       /* Зеленый для успеха/прибыли */
+    --color-danger: #ff453a;        /* Красный для ошибок/убытка */
+    --border-color: #48484a;        /* Цвет рамок */
 
-    --text-primary: #212529;      /* Основной текст */
-    --text-secondary: #6c757d;    /* Вторичный текст (серый) */
-    --text-header: #ecf0f1;       /* Текст в хедере */
-    --text-link: #007bff;         /* Цвет ссылок */
-    --text-placeholder: #6c757d;  /* Текст плейсхолдеров */
-    --text-disabled: #6c757d;     /* Текст неактивных элементов */
-
-    --border-primary: #dee2e6;     /* Основной цвет рамок */
-    --border-input: #ced4da;      /* Рамка полей ввода */
-    --border-darker: #adb5bd;     /* Более темная рамка */
-
-    --accent-primary: #007bff;    /* Основной акцентный цвет (синий) */
-    --accent-primary-hover: #0056b3;
-    --accent-secondary: #6c757d;   /* Вторичный акцент (серый) */
-    --accent-secondary-hover: #5a6268;
-
-    --status-success: #28a745;     /* Успех (зеленый) */
-    --status-warning: #ffc107;     /* Предупреждение (желтый) */
-    --status-danger: #dc3545;      /* Ошибка/Опасность (красный) */
-    --status-info: #17a2b8;        /* Информация (голубой) */
-
-    --status-success-bg: #d4edda;
-    --status-warning-bg: #fff3cd;
-    --status-danger-bg: #f8d7da;
-    --status-info-bg: #d1ecf1;
-
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
-
-    --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-    --border-radius: 0.3rem;      /* Стандартный радиус скругления */
-    --border-radius-lg: 0.5rem;
-    --border-radius-sm: 0.2rem;
+    /* Размеры */
+    --padding-base: 15px;
+    --padding-small: 10px;
+    --border-radius-base: 8px;
 }
 
-/* Темная тема (Пример - активируется добавлением класса "dark-theme" к body) */
-body.dark-theme {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2c2c2c;
-    --bg-header: #111111;
-    --bg-nav-active: #000000;
-    --bg-card-header: #3a3a3a;
-    --bg-input: #3a3a3a;
-    --bg-hover-light: #444444;
-    --bg-disabled: #444444;
-
-    --text-primary: #e9ecef;
-    --text-secondary: #adb5bd;
-    --text-header: #f8f9fa;
-    --text-link: #3498db;
-    --text-placeholder: #6c757d;
-    --text-disabled: #6c757d;
-
-    --border-primary: #495057;
-    --border-input: #5a6268;
-    --border-darker: #6c757d;
-
-    /* Акценты можно оставить или инвертировать */
-    /* --accent-primary: #3498db; */
-    /* --accent-primary-hover: #2980b9; */
-
-    --status-success-bg: #1c4a3a;
-    --status-warning-bg: #664d03;
-    --status-danger-bg: #58151c;
-    --status-info-bg: #0c5460;
-
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Сброс стилей */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
-    font-family: var(--font-family-sans-serif);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    display: flex; /* Для фиксации футера */
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    color: inherit; /* Наследовать от родителя */
-}
-h1 { font-size: 2rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.25rem; }
-h5 { font-size: 1.1rem; }
-h6 { font-size: 1rem; }
-
-p { margin-bottom: 1rem; }
-ul, ol { list-style: none; padding-left: 0; margin-bottom: 1rem; }
-a { color: var(--text-link); text-decoration: none; transition: color 0.15s ease-in-out; }
-a:hover { color: var(--accent-primary-hover); text-decoration: underline; }
-img { vertical-align: middle; border-style: none; max-width: 100%; height: auto; }
-fieldset { border: 1px solid var(--border-primary); padding: 1rem; margin-bottom: 1rem; border-radius: var(--border-radius); }
-legend { width: auto; padding: 0 0.5rem; font-weight: 600; }
-
-/* Базовые стили для кнопок */
-button,
-.btn { /* Общий класс для ссылок-кнопок */
-    display: inline-block;
-    font-weight: 400;
-    color: #ffffff;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    background-color: var(--accent-primary);
-    border: 1px solid var(--accent-primary);
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-primary);
+    font-size: 16px;
     line-height: 1.5;
-    border-radius: var(--border-radius);
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-button:hover, .btn:hover {
-    background-color: var(--accent-primary-hover);
-    border-color: var(--accent-primary-hover);
-    color: #ffffff;
-    text-decoration: none;
-}
-button:focus, .btn:focus { outline: 0; box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); }
-button:disabled, .btn:disabled {
-    background-color: var(--accent-secondary);
-    border-color: var(--accent-secondary);
-    opacity: 0.65;
-    cursor: not-allowed;
+    /* Стили для интеграции с темой Telegram (опционально) */
+    /* background-color: var(--tg-theme-bg-color, var(--bg-color-dark)); */
+    /* color: var(--tg-theme-text-color, var(--text-color-primary)); */
 }
 
-/* Варианты кнопок */
-.btn-secondary { background-color: var(--accent-secondary); border-color: var(--accent-secondary); }
-.btn-secondary:hover { background-color: var(--accent-secondary-hover); border-color: var(--accent-secondary-hover); }
-.btn-success { background-color: var(--status-success); border-color: var(--status-success); }
-.btn-success:hover { background-color: #1e7e34; border-color: #1c7430; }
-.btn-danger { background-color: var(--status-danger); border-color: var(--status-danger); }
-.btn-danger:hover { background-color: #bd2130; border-color: #b21f2d; }
-.btn-warning { background-color: var(--status-warning); border-color: var(--status-warning); color: #212529; }
-.btn-warning:hover { background-color: #e0a800; border-color: #d39e00; color: #212529; }
-.btn-info { background-color: var(--status-info); border-color: var(--status-info); }
-.btn-info:hover { background-color: #117a8b; border-color: #10707f; }
-.btn-light { background-color: #f8f9fa; border-color: #f8f9fa; color: #212529; }
-.btn-light:hover { background-color: #e2e6ea; border-color: #dae0e5; color: #212529; }
-.btn-dark { background-color: #343a40; border-color: #343a40; }
-.btn-dark:hover { background-color: #23272b; border-color: #1d2124; }
+/* --- Основная Структура Приложения --- */
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Используем min-height вместо height для гибкости */
+    max-width: 100%; /* Убедимся, что не выходит за пределы */
+    overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
+}
 
-/* Кнопки с иконками */
-button i, .btn i { margin-right: 0.4rem; }
-button i.fa-spin { margin-right: 0.6rem; } /* Больше отступ для спиннера */
+/* --- Шапка (Header) --- */
+.header {
+    background-color: var(--bg-color-medium);
+    padding: var(--padding-small) var(--padding-base);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
 
-/* Стили для форм */
-label { display: inline-block; margin-bottom: 0.5rem; font-weight: 500; }
-input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-textarea,
-select {
-    display: block;
+.header .balances, .header .farm-stats {
+    font-size: 0.9em;
+    color: var(--text-color-secondary);
+    margin-bottom: 5px;
+}
+
+.header .balances span, .header .farm-stats span {
+    color: var(--text-color-primary); /* Белый для цифр */
+    font-weight: 500;
+}
+
+.header .crypto-balances span {
+    margin-right: 10px;
+}
+.header .crypto-balances span:last-child {
+    margin-right: 0;
+}
+
+/* --- Основной Контент --- */
+.content {
+    flex-grow: 1;
+    padding: var(--padding-base);
+    overflow-y: auto; /* Вертикальная прокрутка, если контент не влезает */
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+}
+
+/* --- Стили Экранов --- */
+.screen {
+    display: none; /* Скрыты по умолчанию */
+    animation: fadeIn 0.3s ease-in-out; /* Плавное появление */
+}
+
+.screen.active {
+    display: block; /* Показываем активный экран */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+h2 {
+    font-size: 1.4em;
+    margin-bottom: var(--padding-base);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--padding-small);
+    color: var(--text-color-primary);
+}
+
+h3 {
+    font-size: 1.1em;
+    margin-top: var(--padding-base);
+    margin-bottom: var(--padding-small);
+    color: var(--text-color-secondary);
+}
+
+/* --- Нижняя Навигация --- */
+.navigation {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--bg-color-medium);
+    padding: 5px 0; /* Уменьшим паддинг */
+    border-top: 1px solid var(--border-color);
+    position: sticky; /* Прилипает книзу */
+    bottom: 0;
+    left: 0;
     width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--text-primary);
-    background-color: var(--bg-input);
-    background-clip: padding-box;
-    border: 1px solid var(--border-input);
-    border-radius: var(--border-radius);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-input:focus, textarea:focus, select:focus {
-    border-color: var(--accent-primary);
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-input[readonly] { background-color: var(--bg-hover-light); opacity: 1; }
-input[type="number"] { /* Для предотвращения слишком широких стрелок */ }
-textarea { resize: vertical; min-height: 80px; }
-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 16px 12px; }
-input[type="checkbox"], input[type="radio"] { width: auto; margin-right: 0.5rem; }
-
-.form-actions { margin-top: 1.5rem; text-align: right; }
-.form-actions button { margin-left: 0.5rem; }
-
-/* Утилиты */
-.text-success { color: var(--status-success); }
-.text-warning { color: var(--status-warning); }
-.text-danger { color: var(--status-danger); }
-.text-info { color: var(--status-info); }
-.text-muted { color: var(--text-secondary); }
-.status-ok { color: var(--status-success); font-weight: bold; }
-.status-warning { color: var(--status-warning); font-weight: bold; }
-.status-error { color: var(--status-danger); font-weight: bold; }
-.float-right { float: right; }
-.d-none { display: none !important; } /* Важный класс для JS */
-.d-block { display: block !important; }
-.d-flex { display: flex !important; }
-.justify-content-between { justify-content: space-between !important; }
-.align-items-center { align-items: center !important; }
-.mt-1 { margin-top: 0.25rem !important; }
-.mt-2 { margin-top: 0.5rem !important; }
-.mt-3 { margin-top: 1rem !important; }
-.mb-1 { margin-bottom: 0.25rem !important; }
-.mb-2 { margin-bottom: 0.5rem !important; }
-.mb-3 { margin-bottom: 1rem !important; }
-.p-1 { padding: 0.25rem !important; }
-.p-2 { padding: 0.5rem !important; }
-.p-3 { padding: 1rem !important; }
-.w-100 { width: 100% !important; }
-
-/* Progress Bar */
-.progress-bar {
-    height: 1rem;
-    background-color: var(--bg-hover-light);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    margin-top: 0.5rem;
-}
-.progress-bar .progress {
-    height: 100%;
-    background-color: var(--accent-primary);
-    transition: width 0.3s ease-in-out;
-    text-align: center;
-    color: white;
-    font-size: 0.75rem;
-    line-height: 1rem;
+    z-index: 100; /* Поверх контента */
 }
 
-/* --- 2. Основная структура приложения --- */
-.app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.app-header {
-    background-color: var(--bg-header);
-    color: var(--text-header);
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: var(--shadow-md);
-    z-index: 1000; /* Header поверх всего */
-}
-
-.app-header .logo { display: flex; align-items: center; }
-.app-header .logo i { font-size: 1.5rem; margin-right: 0.75rem; color: var(--accent-primary); }
-.app-header .logo h1 { font-size: 1.5rem; margin: 0; color: var(--text-header); font-weight: 700; }
-
-.main-nav { margin: 0 1rem; }
-.main-nav .nav-button {
+.navigation button {
     background: none;
     border: none;
-    color: var(--text-header);
-    opacity: 0.8;
-    padding: 0.6rem 0.8rem;
-    margin: 0 0.1rem;
-    border-radius: var(--border-radius-sm);
-    transition: background-color 0.2s ease, opacity 0.2s ease;
-    font-size: 0.9rem;
-}
-.main-nav .nav-button i { font-size: 0.9em; margin-right: 0.3rem; }
-.main-nav .nav-button:hover { background-color: var(--bg-nav-active); opacity: 1; }
-.main-nav .nav-button.active { background-color: var(--bg-nav-active); opacity: 1; font-weight: 600; }
-
-.header-indicators { display: flex; align-items: center; }
-.header-indicators .indicator {
-    margin-left: 1.2rem;
-    font-size: 0.9rem;
-    opacity: 0.9;
-    display: flex;
-    align-items: center;
-}
-.header-indicators .indicator i { margin-right: 0.4rem; color: var(--text-secondary); } /* Иконки индикаторов сероваты */
-.header-indicators .indicator span { font-weight: 500; }
-.header-indicators .crypto-balance-summary i { color: var(--status-warning); } /* Иконка крипты желтая */
-
-.content-area {
-    flex-grow: 1; /* Занимает все доступное пространство */
-    padding: 1.5rem;
-    max-width: 1600px; /* Ограничение ширины контента */
-    margin: 0 auto;   /* Центрирование */
-    width: 100%;
-}
-
-.app-footer {
-    background-color: var(--bg-primary); /* Может быть таким же как фон, или чуть темнее */
-    color: var(--text-secondary);
-    padding: 1rem 1.5rem;
+    color: var(--text-color-secondary); /* Неактивные кнопки - серые */
+    padding: var(--padding-small) 5px;
+    cursor: pointer;
+    font-size: 0.75em; /* Меньше шрифт для компактности */
     text-align: center;
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border-primary);
-    margin-top: auto; /* Прижимаем к низу */
+    flex-grow: 1; /* Растягиваем кнопки */
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    border-bottom: 3px solid transparent; /* Место для активной полоски */
 }
-.app-footer .footer-links { margin-top: 0.5rem; }
-.app-footer .footer-links a { margin: 0 0.5rem; color: var(--text-secondary); }
-.app-footer .footer-links a:hover { color: var(--text-link); }
 
-/* --- 3. Стили Секций (`.game-section`) --- */
-.game-section {
-    display: none; /* Скрываем по умолчанию */
-    background-color: var(--bg-secondary);
-    padding: 1.5rem;
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-primary);
+.navigation button:hover {
+    color: var(--text-color-primary);
 }
-.game-section.active-section { display: block; }
-.game-section > h2 { /* Заголовок секции */
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-primary);
-    display: flex;
-    align-items: center;
-}
-.game-section > h2 i { margin-right: 0.75rem; color: var(--accent-primary); }
 
-/* --- 4. Стили для Дашборда (`#dashboard-section`) --- */
-.dashboard-layout {
+.navigation button.active {
+    color: var(--accent-color-primary); /* Активная кнопка - синяя */
+    font-weight: 600;
+    border-bottom-color: var(--accent-color-primary); /* Синяя полоска снизу */
+}
+
+
+/* --- Общие Стили Элементов --- */
+
+p {
+    margin-bottom: var(--padding-small);
+    color: var(--text-color-secondary);
+}
+
+a {
+    color: var(--accent-color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button, input[type="submit"], .btn { /* Общий стиль для кнопок */
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background-color: var(--accent-color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover, input[type="submit"]:hover, .btn:hover {
+    background-color: darken(var(--accent-color-primary), 10%); /* Немного темнее при наведении */
+}
+
+button:active, input[type="submit"]:active, .btn:active {
+    transform: scale(0.98); /* Эффект нажатия */
+}
+
+/* Вариации кнопок */
+.btn-secondary {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-primary);
+}
+.btn-secondary:hover { background-color: lighten(var(--bg-color-light), 5%); }
+
+.btn-danger {
+    background-color: var(--color-danger);
+    color: white;
+}
+.btn-danger:hover { background-color: darken(var(--color-danger), 10%); }
+
+/* Стили для полей ввода */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color-light);
+    color: var(--text-color-primary);
+    border-radius: var(--border-radius-base);
+    font-size: 1em;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-color-primary);
+    box-shadow: 0 0 0 2px rgba(var(--accent-color-primary), 0.3);
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: var(--padding-base) 0;
+}
+
+/* --- Стили для Списков (Инвентарь, Магазин, Рынки) --- */
+.item-list { /* Общий класс для контейнеров списков */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
+    gap: var(--padding-small);
+    /* Адаптивная сетка: */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Создает колонки минимум 250px */
 }
-.dashboard-card {
-    background-color: var(--bg-secondary); /* Наследует от секции, но можно переопределить */
-    border: 1px solid var(--border-primary);
-    border-radius: var(--border-radius);
-    padding: 1.25rem;
-    box-shadow: var(--shadow-sm);
-}
-.dashboard-card h3 {
-    font-size: 1.15rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-primary);
+
+.inventory-item, .shop-item, .market-listing { /* Карточка элемента */
+    background-color: var(--bg-color-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    padding: var(--padding-small);
     display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Выравнивание контента по левому краю */
+}
+
+.inventory-item img, .shop-item img {
+    max-width: 80px; /* Размер картинки */
+    height: auto;
+    margin-bottom: var(--padding-small);
+    align-self: center; /* Картинку по центру */
+}
+
+.item-details span { /* Текст внутри карточки */
+    display: block; /* Каждый span с новой строки */
+    font-size: 0.9em;
+    margin-bottom: 4px;
+    color: var(--text-color-secondary);
+}
+.item-details span.item-name { /* Название */
+    font-weight: 600;
+    color: var(--text-color-primary);
+    font-size: 1em;
+}
+.item-details span.item-price { /* Цена */
+     font-weight: 500;
+     color: var(--color-success);
+}
+
+.item-actions { /* Кнопки в карточке */
+    margin-top: auto; /* Прижать кнопки к низу карточки */
+    padding-top: var(--padding-small);
+    width: 100%; /* Растянуть контейнер кнопок */
+    display: flex;
+    gap: 5px; /* Отступ между кнопками */
+}
+
+.item-actions button {
+    flex-grow: 1; /* Кнопки занимают равное место */
+    padding: 8px 10px; /* Кнопки поменьше */
+    font-size: 0.9em;
+}
+
+
+/* --- Стили для Рынка Криптовалют --- */
+#crypto-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-small);
+}
+
+.crypto-market-item {
+    background-color: var(--bg-color-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    padding: var(--padding-small);
+    display: flex;
+    flex-wrap: wrap; /* Перенос элементов на моб */
     align-items: center;
-}
-.dashboard-card h3 i { margin-right: 0.5rem; color: var(--text-secondary); } /* Иконки заголовков карточек */
-
-/* Status Card */
-.status-card p span { font-weight: 500; }
-.status-card #farm-status { padding: 0.1rem 0.4rem; border-radius: var(--border-radius-sm); color: white; }
-.status-card #farm-status.status-ok { background-color: var(--status-success); }
-.status-card #farm-status.status-warning { background-color: var(--status-warning); color: var(--text-primary); }
-.status-card #farm-status.status-error { background-color: var(--status-danger); }
-.status-card #profit-estimate-hour i { cursor: help; color: var(--text-secondary); }
-.status-card #panic-shutdown-btn { margin-top: 1rem; width: 100%; }
-
-/* Farm Overview */
-#farm-list-summary p { margin-bottom: 0.5rem; font-size: 0.9rem; }
-#farm-mini-visualization { text-align: center; margin-top: 1rem; font-size: 1.5rem; }
-#farm-mini-visualization i { margin: 0 0.5rem; cursor: pointer; color: var(--text-secondary); }
-#farm-mini-visualization i.status-ok { color: var(--status-success); }
-#farm-mini-visualization i.status-warning { color: var(--status-warning); }
-#farm-mini-visualization i.status-error { color: var(--status-danger); }
-#farm-mini-visualization i.fa-plus-circle { color: var(--accent-primary); }
-
-/* Finances Card */
-.finances-card p span { font-weight: 500; float: right; }
-.finances-card #view-transactions-btn { margin-top: 1rem; font-size: 0.9rem; }
-
-/* Crypto Summary Card */
-#dashboard-crypto-list .crypto-summary-item {
-    display: flex;
     justify-content: space-between;
+    gap: 10px;
+}
+
+.crypto-market-item span {
+    flex-basis: auto; /* Базовая ширина авто */
+}
+
+.crypto-market-item .crypto-name {
+    font-weight: 600;
+    flex-basis: 80px; /* Фикс ширина для названия */
+}
+
+.crypto-market-item .rate {
+    font-weight: 500;
+    flex-grow: 1; /* Занять доступное место */
+    text-align: right;
+}
+
+.crypto-market-item .change {
+    font-size: 0.85em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    min-width: 60px; /* Мин ширина для изменения */
+    text-align: center;
+}
+
+.crypto-market-item .change.positive {
+    background-color: rgba(var(--color-success), 0.2);
+    color: var(--color-success);
+}
+
+.crypto-market-item .change.negative {
+    background-color: rgba(var(--color-danger), 0.2);
+    color: var(--color-danger);
+}
+
+.crypto-market-item input[type="number"] {
+    max-width: 120px; /* Ограничить ширину поля ввода */
+    margin: 0 5px;
+    padding: 8px; /* Поменьше паддинг */
+    flex-grow: 1; /* Растянуть на мал экранах */
+}
+
+.crypto-market-item button {
+    padding: 8px 12px; /* Кнопки поменьше */
+    font-size: 0.9em;
+    flex-shrink: 0; /* Не сжимать кнопку */
+}
+
+.market-chart {
+    margin-top: var(--padding-base);
+    background-color: var(--bg-color-medium);
+    padding: var(--padding-base);
+    border-radius: var(--border-radius-base);
+    min-height: 150px; /* Минимальная высота для графика */
+    display: flex;
     align-items: center;
-    padding: 0.4rem 0;
-    font-size: 0.9rem;
-    border-bottom: 1px dotted var(--border-primary);
-}
-#dashboard-crypto-list .crypto-summary-item:last-child { border-bottom: none; }
-#dashboard-crypto-list .crypto-summary-item span:first-child { font-weight: 500; min-width: 40px; } /* Тикер */
-#dashboard-crypto-list .crypto-summary-item span:nth-child(3) { color: var(--text-secondary); } /* Стоимость в $ */
-#dashboard-crypto-list .price-change { font-size: 0.8em; font-weight: bold; padding: 0.1rem 0.3rem; border-radius: var(--border-radius-sm); }
-.price-change.price-up { color: var(--status-success); background-color: var(--status-success-bg); }
-.price-change.price-down { color: var(--status-danger); background-color: var(--status-danger-bg); }
-#go-to-wallet-btn { margin-top: 1rem; font-size: 0.9rem; }
-
-/* Event Log & Alerts */
-#log-output, #alerts-output {
-    max-height: 250px;
-    overflow-y: auto;
-    border: 1px solid var(--border-primary);
-    padding: 0.75rem;
-    border-radius: var(--border-radius-sm);
-    font-size: 0.85rem;
-    background-color: var(--bg-primary); /* Чуть другой фон для логов */
-}
-#log-output li, #alerts-output li { padding: 0.3rem 0; border-bottom: 1px dotted #eee; }
-#log-output li:last-child, #alerts-output li:last-child { border-bottom: none; }
-#alerts-output li { display: flex; align-items: center; }
-#alerts-output li i { margin-right: 0.5rem; width: 1em; text-align: center; }
-#alerts-output li.alert-warning { color: #856404; background-color: var(--status-warning-bg); border-left: 3px solid var(--status-warning); padding-left: 0.5rem;}
-#alerts-output li.alert-info { color: #0c5460; background-color: var(--status-info-bg); border-left: 3px solid var(--status-info); padding-left: 0.5rem;}
-#alerts-output li.alert-danger { color: #721c24; background-color: var(--status-danger-bg); border-left: 3px solid var(--status-danger); padding-left: 0.5rem;}
-#clear-alerts-btn { margin-top: 0.75rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-
-/* --- 5. Стили для Рынка (`#market-section`) --- */
-/* Основные табы (Оборудование / Крипта) */
-.market-main-tabs { margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-primary); }
-.market-category-button {
-    background: none; border: none; padding: 0.75rem 1.5rem; margin-bottom: -2px;
-    cursor: pointer; font-size: 1.1rem; color: var(--text-secondary);
-    border-bottom: 3px solid transparent; transition: color 0.2s ease, border-color 0.2s ease;
-}
-.market-category-button.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 600; }
-.market-category-content { display: none; }
-.market-category-content.active { display: block; }
-
-/* Табы компонентов (GPU / PSU / ...) */
-.market-component-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.component-tab-button {
-    background-color: var(--bg-hover-light); border: 1px solid var(--border-primary); color: var(--text-secondary);
-    padding: 0.5rem 1rem; border-radius: var(--border-radius); font-size: 0.9rem;
-}
-.component-tab-button.active { background-color: var(--accent-primary); border-color: var(--accent-primary); color: white; font-weight: 500; }
-
-/* Табы под-рынка (Новые / БУ / Ордера / Продать) */
-.market-sub-tabs { border-bottom: 1px solid var(--border-primary); margin-bottom: 1rem; }
-.market-subtab-button {
-    background: none; border: none; padding: 0.6rem 1.2rem; margin-bottom: -1px;
-    cursor: pointer; font-size: 1rem; color: var(--text-secondary);
-    border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease;
-}
-.market-subtab-button.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 500; }
-.market-subtab-content { display: none; }
-.market-subtab-content.active { display: block; }
-
-/* Фильтры и Сетка */
-.market-filters {
-    background-color: var(--bg-primary); padding: 1rem; border-radius: var(--border-radius);
-    margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
-}
-.market-filters label { margin-bottom: 0; font-weight: normal; }
-.market-filters input, .market-filters select { width: auto; min-width: 150px; margin-bottom: 0; font-size: 0.9rem; }
-
-.items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-.market-listing-card { /* Улучшенная карточка товара */
-    border: 1px solid var(--border-primary); border-radius: var(--border-radius);
-    background-color: var(--bg-secondary); display: flex; flex-direction: column;
-    box-shadow: var(--shadow-sm); transition: box-shadow 0.2s ease; padding: 0; /* Убрали паддинг тут */
-    overflow: hidden; /* Чтобы картинка не вылезала */
-}
-.market-listing-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.market-listing-card .gpu-image { /* Картинка теперь фон */
-     width: 100%; height: 180px; /* Фиксированная высота */
-     background-size: contain;
-     background-repeat: no-repeat;
-     background-position: center;
-     background-color: #f8f9fa; /* Фон для прозрачных PNG */
-     border-bottom: 1px solid var(--border-primary);
-     margin-bottom: 0;
-}
-.market-listing-card .gpu-info { padding: 1rem; flex-grow: 1; }
-.market-listing-card .gpu-info h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
-.market-listing-card .gpu-info p { margin-bottom: 0.4rem; font-size: 0.85rem; color: var(--text-secondary); }
-.market-listing-card .gpu-info p span { font-weight: 500; color: var(--text-primary); }
-.market-listing-card .wear-tear { color: var(--status-warning); font-weight: bold !important; }
-.market-listing-card .seller-name { font-style: italic; }
-.market-listing-card .gpu-price-action {
-    padding: 1rem; border-top: 1px solid var(--border-primary); margin-top: auto;
-    display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-card-header);
-}
-.market-listing-card .price { font-size: 1.25rem; font-weight: 600; color: var(--status-success); margin: 0; }
-.market-listing-card .buy-button, .sell-action-button { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
-.sell-action-button { background-color: var(--status-warning); color: #212529; border-color: var(--status-warning); }
-.sell-action-button:hover { background-color: #e0a800; border-color: #d39e00; }
-
-/* Ордера */
-.order-book-container { display: flex; gap: 2rem; }
-.order-book-column { flex: 1; }
-.order-book-column h4 { text-align: center; margin-bottom: 0.5rem; font-size: 1rem; }
-.order-book-column ul {
-    border: 1px solid var(--border-primary); border-radius: var(--border-radius-sm);
-    min-height: 150px; max-height: 250px; overflow-y: auto; padding: 0.5rem;
-    font-size: 0.85rem; margin-bottom: 1rem;
-}
-.order-book-column ul li { display: flex; justify-content: space-between; padding: 0.2rem 0; }
-#buy-orders-list li span:first-child { color: var(--status-success); font-weight: 500; } /* Цена покупки */
-#sell-orders-list li span:first-child { color: var(--status-danger); font-weight: 500; } /* Цена продажи */
-.order-book-column form h5 { margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.95rem; }
-.order-book-column form label { font-size: 0.85rem; margin-bottom: 0.2rem; }
-.order-book-column form input, .order-book-column form select { font-size: 0.9rem; padding: 0.4rem 0.6rem; margin-bottom: 0.5rem; }
-.order-book-column form button { width: 100%; font-size: 0.9rem; padding: 0.5rem; }
-
-/* Крипто Биржа */
-.crypto-exchange-layout { display: grid; grid-template-columns: 1fr 250px; grid-template-rows: auto 1fr auto; gap: 1rem; grid-template-areas: "pair pair" "chart orderbook" "chart trade"; min-height: 60vh; }
-.crypto-pair-selection { grid-area: pair; }
-.crypto-chart-large { grid-area: chart; }
-.crypto-order-book { grid-area: orderbook; border-left: 1px solid var(--border-primary); padding-left: 1rem; }
-.crypto-trade-form { grid-area: trade; border-top: 1px solid var(--border-primary); padding-top: 1rem; }
-
-#crypto-exchange-chart-container { height: 100%; position: relative; border: 1px solid var(--border-primary); border-radius: var(--border-radius); background: var(--bg-primary); }
-.chart-placeholder-large { display: flex; align-items: center; justify-content: center; height: calc(100% - 40px); color: var(--text-secondary); font-style: italic; }
-.chart-timeframes { position: absolute; top: 5px; left: 5px; display: flex; gap: 5px; }
-.chart-timeframes button { font-size: 0.8rem; padding: 0.2rem 0.5rem; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-primary); }
-.chart-timeframes button.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
-
-.crypto-order-book h4 { font-size: 1rem; margin-bottom: 0.5rem; }
-.crypto-order-book .orders { display: flex; flex-direction: column; height: calc(100% - 30px); }
-.crypto-order-book .asks, .crypto-order-book .bids { flex: 1; overflow-y: auto; }
-.crypto-order-book h5 { font-size: 0.85rem; text-align: center; margin-bottom: 0.3rem; }
-.crypto-order-book ul { padding: 0; margin: 0; font-size: 0.8rem; }
-.crypto-order-book ul li { display: flex; justify-content: space-between; padding: 0.1rem 0.3rem; }
-.crypto-order-book .asks li span:first-child { color: var(--status-danger); }
-.crypto-order-book .bids li span:first-child { color: var(--status-success); }
-
-.crypto-trade-form h4 { font-size: 1rem; margin-bottom: 0.5rem; }
-.trade-tabs { display: flex; margin-bottom: 1rem; border-bottom: 1px solid var(--border-primary); }
-.trade-tabs button { flex: 1; background: none; border: none; padding: 0.5rem; font-size: 1rem; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; }
-.trade-tabs button.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 500; }
-.trade-form { display: none; }
-.trade-form.active { display: block; }
-.trade-form p { font-size: 0.85rem; margin-bottom: 0.5rem; }
-.trade-form label { font-size: 0.85rem; margin-bottom: 0.2rem; }
-.trade-form input { font-size: 0.9rem; padding: 0.4rem 0.6rem; margin-bottom: 0.5rem; }
-.trade-form button { width: 100%; font-size: 0.95rem; }
-#crypto-trade-buy-form button { background-color: var(--status-success); border-color: var(--status-success); }
-#crypto-trade-buy-form button:hover { background-color: #1e7e34; border-color: #1c7430; }
-#crypto-trade-sell-form button { background-color: var(--status-danger); border-color: var(--status-danger); }
-#crypto-trade-sell-form button:hover { background-color: #bd2130; border-color: #b21f2d; }
-
-
-/* --- 6. Управление Фермами (`#rig-management-section`) --- */
-.rig-list-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border-primary); margin-bottom: 1rem; }
-.rig-tab-button { background: none; border: none; padding: 0.75rem 1.25rem; cursor: pointer; font-size: 1rem; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
-.rig-tab-button.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 500; }
-#add-new-rig-tab-btn { margin-left: auto; /* Кнопку добавления вправо */ background: none; border: none; color: var(--accent-primary); cursor: pointer; padding: 0.75rem; }
-#add-new-rig-tab-btn:hover { color: var(--accent-primary-hover); }
-
-.rig-content { display: none; }
-.rig-content.active { display: block; }
-.rig-header { display: flex; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-primary); }
-.rig-header h3 { margin: 0; flex-grow: 1; }
-.rig-header h3[contenteditable="true"]:focus { outline: 1px dashed var(--accent-primary); background: var(--bg-hover-light); }
-.rig-header .rig-status { margin-left: 1rem; font-size: 0.9rem; }
-.rig-header button { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem; padding: 0.3rem; margin-left: 0.5rem; }
-.rig-header button:hover { color: var(--accent-primary); }
-.rig-header .delete-rig-btn:hover { color: var(--status-danger); }
-
-.rig-management-layout-advanced { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto 1fr; gap: 1.5rem; grid-template-areas: "slots inventory" "actions actions"; }
-.rig-slots-view { grid-area: slots; }
-.rig-inventory-view { grid-area: inventory; }
-.rig-item-actions-detailed { grid-area: actions; background: var(--bg-primary); padding: 1rem; border-radius: var(--border-radius); }
-
-.rig-slots-view h4, .rig-inventory-view h4, .rig-item-actions-detailed h4 { font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; }
-.rig-slots-view h4 i, .rig-inventory-view h4 i, .rig-item-actions-detailed h4 i { margin-right: 0.5rem; }
-
-.rig-component-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
-.rig-slot {
-    border: 1px dashed var(--border-darker); padding: 0.75rem; border-radius: var(--border-radius);
-    background-color: var(--bg-hover-light); cursor: pointer; font-size: 0.85rem; min-height: 60px;
-    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-}
-.rig-slot:hover { background-color: #dde; border-color: var(--border-darker); }
-.rig-slot.occupied { border-style: solid; border-color: var(--status-success); background-color: var(--status-success-bg); color: #155724; cursor: default; }
-.rig-slot.selected { border-color: var(--accent-primary); border-width: 2px; box-shadow: 0 0 5px var(--accent-primary); background-color: #cfe2ff; }
-.rig-slot b { font-size: 0.9em; display: block; margin-bottom: 0.2rem; }
-.psu-slot.occupied { border-color: var(--status-info); background-color: var(--status-info-bg); color: #0c5460; }
-.mobo-slot.occupied { border-color: #6f42c1; background-color: #e9d8fd; color: #6f42c1; } /* Пример фиолетового */
-.cooling-slot.occupied { border-color: var(--status-info); background-color: var(--status-info-bg); color: #0c5460; }
-
-.rig-inventory-view select { margin-bottom: 0.5rem; font-size: 0.9rem; }
-.inventory-list { display: none; max-height: 300px; overflow-y: auto; }
-.inventory-list.active { display: block; }
-.inventory-list li {
-    padding: 0.5rem 0.75rem; margin-bottom: 0.3rem; border: 1px solid var(--border-primary);
-    border-radius: var(--border-radius-sm); cursor: pointer; font-size: 0.9rem; transition: background-color 0.2s ease;
-}
-.inventory-list li:hover { background-color: var(--bg-hover-light); }
-.inventory-list li.selected { background-color: var(--accent-primary); color: white; border-color: var(--accent-primary); font-weight: 500; }
-
-#selected-rig-item-details-rig_1 h5 { font-size: 1rem; margin-bottom: 0.5rem; }
-#selected-rig-item-details-rig_1 p { font-size: 0.9rem; margin-bottom: 0.3rem; }
-.tuning-controls { border-top: 1px dashed var(--border-primary); padding-top: 0.75rem; margin-top: 0.75rem; }
-.tuning-controls label { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-.tuning-controls input { width: 80px; font-size: 0.85rem; padding: 0.3rem 0.5rem; }
-.action-buttons { margin-top: 1rem; display: flex; gap: 0.5rem; }
-.action-buttons button { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
-
-/* --- 7. Кошелек (`#wallet-section`) --- */
-.wallet-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; align-items: flex-start; }
-.wallet-balances, .wallet-portfolio, .wallet-crypto-charts { /* Используем одни стили для карточек */
-    background-color: var(--bg-secondary); border: 1px solid var(--border-primary);
-    border-radius: var(--border-radius); padding: 1.25rem; box-shadow: var(--shadow-sm);
-}
-.wallet-crypto-charts { grid-column: span 2; } /* Графики на всю ширину */
-
-.wallet-balances h3, .wallet-portfolio h3, .wallet-crypto-charts h3 { font-size: 1.15rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-primary); padding-bottom: 0.5rem; }
-
-.balance-item { display: flex; align-items: center; padding: 0.6rem 0; border-bottom: 1px dotted var(--border-primary); font-size: 0.95rem; gap: 0.75rem; }
-.balance-item:last-child { border-bottom: none; }
-.balance-item i { font-size: 1.2em; min-width: 20px; text-align: center; color: var(--text-secondary); }
-.balance-item.fiat-balance i { color: var(--status-success); }
-.balance-item span:nth-child(2) { flex-grow: 1; font-weight: 500; } /* Название */
-.balance-item span:nth-child(3) { font-weight: bold; min-width: 100px; text-align: right; } /* Баланс */
-.balance-item .balance-value { font-size: 0.85em; color: var(--text-secondary); min-width: 80px; text-align: right; }
-.balance-item button { background: none; border: none; color: var(--text-secondary); padding: 0.2rem; font-size: 0.9em; cursor: pointer; }
-.balance-item button:hover { color: var(--accent-primary); }
-
-.portfolio-chart-container { text-align: center; margin-bottom: 1.5rem; }
-#portfolio-pie-chart { min-height: 200px; display: flex; align-items: center; justify-content: center; background-color: var(--bg-hover-light); border-radius: 50%; width: 200px; height: 200px; margin: 0 auto; color: var(--text-placeholder); } /* Плейсхолдер для диаграммы */
-
-.portfolio-rebalance h4 { font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; }
-.portfolio-rebalance h4 i { margin-right: 0.5rem; }
-#rebalance-targets .rebalance-target-item { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-#rebalance-targets label { margin-bottom: 0; font-size: 0.9rem; min-width: 60px; }
-#rebalance-targets input { width: 70px; font-size: 0.9rem; padding: 0.3rem 0.5rem; }
-#rebalance-form p { font-size: 0.9rem; font-weight: 500; margin-top: 0.5rem; }
-#calculate-rebalance-btn { font-size: 0.9rem; padding: 0.5rem 1rem; }
-#rebalance-actions h5 { font-size: 0.95rem; margin-bottom: 0.5rem; }
-#rebalance-steps-list { font-size: 0.9rem; }
-#rebalance-steps-list li { margin-bottom: 0.3rem; }
-#execute-rebalance-btn { font-size: 0.9rem; padding: 0.5rem 1rem; margin-top: 0.5rem; background-color: var(--status-success); border-color: var(--status-success); }
-#execute-rebalance-btn:hover { background-color: #1e7e34; border-color: #1c7430; }
-
-.wallet-crypto-charts select { width: auto; min-width: 150px; margin-bottom: 1rem; font-size: 0.9rem; }
-.chart-container-wallet { position: relative; border: 1px solid var(--border-primary); border-radius: var(--border-radius); min-height: 300px; background: var(--bg-primary); }
-#wallet-selected-crypto-chart { display: flex; align-items: center; justify-content: center; height: calc(100% - 40px); color: var(--text-placeholder); }
-.chart-timeframes-wallet { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; } /* Справа в кошельке */
-.chart-timeframes-wallet button { font-size: 0.8rem; padding: 0.2rem 0.5rem; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-primary); }
-.chart-timeframes-wallet button.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
-
-/* --- 8. Исследования (`#research-section`) --- */
-.research-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-.research-tree h3, .current-research h3 { font-size: 1.15rem; margin-bottom: 1rem; }
-#research-tree-container {
-    border: 1px solid var(--border-primary); padding: 1rem; border-radius: var(--border-radius);
-    min-height: 400px; background: var(--bg-primary); /* Для визуального разделения */
-    /* Стили для узлов дерева (потребуется JS для позиционирования) */
-}
-.research-node {
-    border: 1px solid var(--border-darker); background: var(--bg-secondary); padding: 0.75rem;
-    border-radius: var(--border-radius); margin-bottom: 1rem; box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.research-node h4 { font-size: 1rem; margin-bottom: 0.3rem; color: var(--accent-primary); }
-.research-node p { font-size: 0.85rem; margin-bottom: 0.2rem; color: var(--text-secondary); }
-.research-node p:last-of-type { margin-bottom: 0.5rem; }
-.research-node button { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
-.research-node.available { border-color: var(--status-success); }
-.research-node.locked { border-color: var(--border-primary); opacity: 0.7; }
-.research-node.locked button { background-color: var(--accent-secondary); border-color: var(--accent-secondary); cursor: not-allowed; }
-.research-node.completed { border-color: var(--accent-primary); background-color: #cfe2ff; }
-.research-node.completed button { display: none; }
-
-.current-research #current-research-details {
-    background: var(--bg-hover-light); padding: 1rem; border-radius: var(--border-radius);
-    margin-bottom: 1.5rem; text-align: center;
-}
-.current-research #current-research-details h4 { font-size: 1rem; color: var(--accent-primary); }
-#cancel-research-btn { font-size: 0.8rem; padding: 0.3rem 0.6rem; background-color: var(--status-danger); border-color: var(--status-danger); }
-#completed-research-list li { font-size: 0.9rem; padding: 0.3rem 0; border-bottom: 1px dotted var(--border-primary); }
-
-/* --- 9. Персонал (`#staff-section`) --- */
-.staff-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; }
-.available-staff h3, .hired-staff h3 { font-size: 1.15rem; margin-bottom: 1rem; }
-#available-staff-list, #hired-staff-list { max-height: 400px; overflow-y: auto; padding-right: 0.5rem; /* Отступ для скроллбара */ }
-.staff-card {
-    border: 1px solid var(--border-primary); border-radius: var(--border-radius); padding: 1rem;
-    margin-bottom: 1rem; background: var(--bg-secondary); box-shadow: var(--shadow-sm);
-}
-.staff-card h4 { font-size: 1.05rem; margin-bottom: 0.5rem; }
-.staff-card p { font-size: 0.9rem; margin-bottom: 0.3rem; }
-.staff-card button { font-size: 0.85rem; padding: 0.4rem 0.8rem; margin-top: 0.5rem; }
-.staff-card.hired { background-color: var(--bg-hover-light); }
-.staff-card .staff-assignment { font-size: 0.85rem; padding: 0.4rem; margin-top: 0.5rem; }
-.fire-staff-btn { background-color: var(--status-danger); border-color: var(--status-danger); margin-left: 0.5rem; }
-
-/* --- 10. События (`#events-section`) --- */
-.events-feed { max-height: 500px; overflow-y: auto; }
-#news-feed-list li {
-    padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: var(--border-radius);
-    border-left: 4px solid var(--text-secondary); background-color: var(--bg-primary);
-    font-size: 0.9rem;
-}
-.news-item .news-time { font-weight: 500; margin-right: 0.75rem; color: var(--text-secondary); }
-.news-item .news-headline { font-weight: 500; }
-.news-item .news-impact { display: block; font-size: 0.8em; color: var(--text-secondary); margin-top: 0.2rem; font-style: italic; }
-.news-item.positive { border-left-color: var(--status-success); background-color: var(--status-success-bg); }
-.news-item.negative { border-left-color: var(--status-danger); background-color: var(--status-danger-bg); }
-.news-item.neutral { border-left-color: var(--status-info); background-color: var(--status-info-bg); }
-
-/* --- 11. Достижения (`#achievements-section`) --- */
-.achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
-.achievement-card {
-    border: 1px solid var(--border-primary); border-radius: var(--border-radius); padding: 1rem;
-    text-align: center; background: var(--bg-secondary); box-shadow: var(--shadow-sm);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.achievement-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-.achievement-card i { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
-.achievement-card h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
-.achievement-card p { font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
-.achievement-card p:last-of-type { font-weight: 500; color: var(--accent-primary); margin-bottom: 0; }
-.achievement-card.unlocked { border-color: var(--status-success); }
-.achievement-card.unlocked i { color: var(--status-success); }
-.achievement-card.locked { opacity: 0.6; background: var(--bg-hover-light); }
-.achievement-card.locked i { color: var(--text-secondary); }
-.achievement-card.progress { border-color: var(--status-info); }
-.achievement-card.progress i { color: var(--status-info); }
-
-/* --- 12. Админ-Панель (`#admin-panel-section`) --- */
-#admin-panel-section #login-section { /* Стили для формы входа внутри админки */
-    max-width: 400px; margin: 2rem auto; padding: 1.5rem; border: 1px dashed var(--accent-primary);
-    border-radius: var(--border-radius); background: var(--bg-primary);
-}
-#admin-panel-section #login-section h3 { text-align: center; }
-#admin-panel-section #login-button { width: 100%; margin-top: 1rem; }
-
-.admin-tabs { display: flex; border-bottom: 1px solid var(--border-primary); margin-bottom: 1.5rem; }
-.admin-tab-button { background: none; border: none; padding: 0.75rem 1.25rem; cursor: pointer; font-size: 1rem; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
-.admin-tab-button.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); font-weight: 500; }
-.admin-tab-content { display: none; }
-.admin-tab-content.active { display: block; }
-
-#admin-panel h3 { font-size: 1.25rem; margin-bottom: 1rem; } /* Заголовок панели */
-#admin-panel h4 { /* Заголовки подсекций */
-    font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 1rem;
-    padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-primary);
-}
-#admin-panel h5 { font-size: 1rem; margin-bottom: 0.75rem; } /* Заголовки форм */
-
-/* Списки в админке */
-#component-list-admin, #crypto-list-admin, #event-types-list-admin {
-    margin-bottom: 1rem;
-}
-#component-list-admin li, #crypto-list-admin li, #event-types-list-admin li {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0.75rem 1rem; margin-bottom: 0.5rem; border: 1px solid var(--border-primary);
-    border-radius: var(--border-radius-sm); background: var(--bg-secondary);
-    font-size: 0.9rem;
-}
-.list-item-info { flex-grow: 1; margin-right: 1rem; }
-.list-item-info strong { display: block; font-size: 1.05em; margin-bottom: 0.2rem; }
-.list-item-info span { margin-right: 0.75rem; color: var(--text-secondary); font-size: 0.9em; }
-.list-actions button { font-size: 0.8rem; padding: 0.3rem 0.6rem; margin-left: 0.3rem; }
-.edit-button { background-color: var(--status-warning); color: #212529; border-color: var(--status-warning); }
-.delete-button { background-color: var(--status-danger); border-color: var(--status-danger); }
-
-/* Формы в админке */
-.component-form, #crypto-form, #event-form {
-    display: none; /* Показываем через JS */
-    border: 1px solid var(--accent-primary); padding: 1.5rem; border-radius: var(--border-radius);
-    margin-top: 1rem; background: var(--bg-primary);
-}
-.component-form label, #crypto-form label, #event-form label { display: block; margin-bottom: 0.75rem; }
-.component-form input, #crypto-form input, #event-form input,
-.component-form select, #crypto-form select, #event-form select,
-.component-form fieldset, #crypto-form fieldset, #event-form fieldset { margin-bottom: 0.5rem; } /* Уменьшили отступ для плотности */
-#gpu-hashrates-admin-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem 1rem; }
-
-/* Секция настроек в админке */
-#admin-tab-settings label { display: block; margin-bottom: 1rem; }
-#admin-tab-settings input[type="number"] { width: 120px; display: inline-block; margin-left: 0.5rem; }
-#admin-tab-settings button { margin-top: 1rem; }
-#admin-tab-settings hr { margin: 1.5rem 0; }
-#admin-tab-settings h4 { margin-top: 0; } /* Убрать верхний отступ у заголовка сброса */
-#reset-player-progress-btn, #reset-all-definitions-btn { margin-right: 1rem; }
-
-/* --- 13. Настройки Игры (`#settings-section`) --- */
-.settings-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-.setting-group { background: var(--bg-primary); padding: 1.5rem; border-radius: var(--border-radius); border: 1px solid var(--border-primary); }
-.setting-group h4 { font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px dashed var(--border-primary); padding-bottom: 0.5rem; }
-.setting-group label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; font-size: 0.95rem; }
-.setting-group label select, .setting-group label input[type="number"] { max-width: 150px; font-size: 0.9rem; padding: 0.4rem 0.6rem; }
-.setting-group label input[type="checkbox"] { width: auto; transform: scale(1.1); margin-left: auto; /* Чекбокс справа */ }
-.setting-group button { font-size: 0.9rem; padding: 0.5rem 1rem; margin-right: 0.5rem; }
-
-/* --- Медиа-запросы (Базовая адаптивность) --- */
-@media (max-width: 1200px) {
-    .content-area { padding: 1rem; }
-    .dashboard-layout { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-    .rig-management-layout-advanced { grid-template-columns: 1fr; grid-template-areas: "slots" "inventory" "actions"; }
-    .wallet-layout { grid-template-columns: 1fr; }
-    .research-layout { grid-template-columns: 1fr; }
-    .staff-layout { grid-template-columns: 1fr; }
-    .crypto-exchange-layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto 1fr auto; grid-template-areas: "pair" "orderbook" "trade" "chart" "chart"; } /* Перестраиваем биржу */
-    .crypto-order-book, .crypto-trade-form { border: none; padding: 0; }
+    justify-content: center;
+    color: var(--text-color-secondary);
 }
 
-@media (max-width: 768px) {
-    .app-header { flex-direction: column; align-items: flex-start; padding: 0.5rem 1rem; }
-    .main-nav { width: 100%; margin: 0.5rem 0; display: flex; flex-wrap: wrap; justify-content: center; }
-    .main-nav .nav-button { font-size: 0.8rem; padding: 0.4rem 0.6rem; margin: 0.2rem; }
-    .header-indicators { width: 100%; justify-content: space-around; margin-top: 0.5rem; }
-    .header-indicators .indicator { margin-left: 0.5rem; font-size: 0.8rem; }
 
-    .game-section > h2 { font-size: 1.5rem; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1.1rem; }
-
-    .items-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-    .order-book-container { flex-direction: column; gap: 1rem; }
+/* --- Стили для Табов (Рынок Б/У) --- */
+.market-tabs {
+    display: flex;
+    margin-bottom: var(--padding-base);
+    border-bottom: 1px solid var(--border-color);
 }
 
-@media (max-width: 480px) {
-    .main-nav .nav-button span { display: none; } /* Оставляем только иконки на очень маленьких экранах */
-    .main-nav .nav-button i { margin-right: 0; }
-    .items-grid { grid-template-columns: 1fr; } /* Один столбец */
+.market-tabs .tab-btn {
+    flex-grow: 1;
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    font-size: 1em;
+    text-align: center;
+}
+
+.market-tabs .tab-btn:hover {
+    color: var(--text-color-primary);
+}
+
+.market-tabs .tab-btn.active {
+    color: var(--accent-color-primary);
+    border-bottom-color: var(--accent-color-primary);
+}
+
+.market-tab {
+    display: none; /* Скрываем табы по умолчанию */
+}
+.market-tab.active {
+    display: block; /* Показываем активный таб */
+}
+
+
+/* --- Админ Панель --- */
+.admin-panel {
+    /* Можно добавить стили для фона или рамки админки */
+}
+
+#admin-content {
+    display: none; /* Скрыт по умолчанию */
+}
+.admin-panel.logged-in #admin-content {
+    display: block; /* Показываем контент после логина */
+}
+.admin-panel.logged-in #admin-login-form {
+    display: none; /* Скрываем форму логина */
+}
+
+#add-gpu-form {
+    background-color: var(--bg-color-medium);
+    padding: var(--padding-base);
+    border-radius: var(--border-radius-base);
+    border: 1px solid var(--border-color);
+}
+
+#add-gpu-form input {
+    margin-bottom: var(--padding-small); /* Меньше отступ в форме */
+}
+
+#admin-logout-button {
+    margin-top: var(--padding-base);
+    background-color: var(--color-danger);
+}
+#admin-logout-button:hover {
+    background-color: darken(var(--color-danger), 10%);
+}
+
+/* --- Медиа-запросы для адаптивности (Пример) --- */
+@media (max-width: 600px) {
+    body { font-size: 14px; } /* Уменьшаем шрифт на маленьких экранах */
+    .header .balances, .header .farm-stats { font-size: 0.8em; }
+    h2 { font-size: 1.2em; }
+    .navigation button { font-size: 0.7em; }
+    .item-list { grid-template-columns: 1fr; } /* Одна колонка на маленьких экранах */
+    .crypto-market-item { flex-direction: column; align-items: stretch; } /* Элементы крипторынка в столбик */
+    .crypto-market-item .rate { text-align: left; }
+    .crypto-market-item input[type="number"] { max-width: none; width: 100%; } /* Поле ввода на всю ширину */
 }
