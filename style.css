@@ -1,423 +1,291 @@
-/* --- Переменные --- */
+/* Базовые стили и переменные (можно использовать переменные темы ТГ) */
 :root {
-    /* Базовые цвета игры */
-    --font-primary: 'Nunito', sans-serif;
-    --font-secondary: 'Comfortaa', sans-serif;
-    --color-accent: #e74c3c; /* Основной акцент (кнопки по умолчанию) */
-    --color-accent-dark: #c0392b;
-    --color-score: #2ecc71; /* Цвет счета */
-    --color-upgrade-disabled: #bdc3c7; /* Неактивные кнопки */
-    --color-achievement-unlocked: #ffd700; /* Золотой для ачивок */
-    --color-golden-pizza: gold;
-    --color-toast-bg: rgba(0, 0, 0, 0.8);
-    --color-toast-text: white;
-    --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.15);
+    --tg-theme-bg-color: #212121; /* Пример */
+    --tg-theme-text-color: #ffffff; /* Пример */
+    --tg-theme-button-color: #5288c1; /* Пример */
+    --tg-theme-button-text-color: #ffffff; /* Пример */
+    --tg-theme-secondary-bg-color: #181818; /* Пример */
 
-    /* Переменные для темы Telegram (значения по умолчанию, будут перезаписаны JS) */
-    --tma-bg-color: #ffffff;
-    --tma-text-color: #000000;
-    --tma-hint-color: #707579; /* Более контрастный серый по умолчанию */
-    --tma-link-color: #2481cc;
-    --tma-button-color: #2481cc;
-    --tma-button-text-color: #ffffff;
-    --tma-secondary-bg-color: #f1f1f1;
+    --app-padding: 15px;
+    --border-radius: 10px;
+    --accent-color: #6200ea;
+    --accent-color-dark: #3700b3;
+    --text-color-secondary: #aaaaaa;
+    --font-family: 'Inter', sans-serif;
+    --bg-color: var(--tg-theme-bg-color, #f4f4f9);
+    --text-color: var(--tg-theme-text-color, #121212);
+    --card-bg: var(--tg-theme-secondary-bg-color, #ffffff);
+    --button-bg: var(--tg-theme-button-color, var(--accent-color));
+    --button-text: var(--tg-theme-button-text-color, #ffffff);
 }
 
-/* --- Базовые стили --- */
-*, *::before, *::after {
+/* Сброс и базовые настройки */
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 html {
-    /* Плавная прокрутка, если понадобится */
-    scroll-behavior: smooth;
+    font-size: 16px; /* Базовый размер для rem */
 }
 
 body {
-    font-family: var(--font-primary);
-    /* Используем цвета темы Telegram */
-    background-color: var(--tma-bg-color);
-    color: var(--tma-text-color);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Выравниваем по верху для длинного контента */
-    min-height: 100vh;
-    padding: 15px; /* Уменьшим отступы для мобильных */
-    overflow-x: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent; /* Убираем синюю подсветку при тапе */
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overscroll-behavior: none; /* Предотвратить "потягивание" страницы */
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Убрать подсветку при тапе */
 }
 
-h1, h2 {
-    font-family: var(--font-secondary);
-    /* Используем цвет кнопок ТГ для заголовков */
-    color: var(--tma-button-color, var(--color-accent));
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-h1 { font-size: 2em; }
-h2 { font-size: 1.6em; }
-
-/* --- Структура --- */
-.game-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: 100%;
-    max-width: 1000px;
-}
-
-.column {
-    flex: 1;
-    min-width: 280px; /* Меньшая мин. ширина */
+.app {
     display: flex;
     flex-direction: column;
+    min-height: 100vh; /* Или использовать viewport height ТГ */
+    max-width: 100%;
+    overflow: hidden; /* Предотвратить горизонтальный скролл */
+}
+
+/* Верхняя панель */
+.status-bar {
+    display: flex;
+    justify-content: space-between; /* Распределить элементы */
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.1); /* Полупрозрачный фон */
+    padding: 10px var(--app-padding);
+    font-size: 0.8rem;
+    flex-wrap: wrap; /* Перенос на новую строку если не влезает */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-bar > div {
+    margin: 2px 5px; /* Небольшие отступы */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Расстояние между иконкой и текстом */
+}
+
+.currency-icon, .hash-icon, .power-icon {
+    font-size: 1rem;
+}
+
+.user-info {
+    font-weight: 600;
+}
+
+/* Основная область */
+.content {
+    flex-grow: 1; /* Занимает все доступное пространство */
+    padding: var(--app-padding);
+    overflow-y: auto; /* Вертикальный скролл для контента */
+    padding-bottom: 80px; /* Отступ снизу для нав. панели */
+}
+
+.screen {
+    display: none; /* Скрыты по умолчанию */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.screen.active {
+    display: block; /* Показать активный экран */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Стили для списков (магазин, инвентарь, рынок) */
+.item-list, .upgrade-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Адаптивная сетка */
     gap: 15px;
 }
 
-.panel {
-    /* Используем вторичный фон ТГ */
-    background: var(--tma-secondary-bg-color);
-    border-radius: 12px; /* Чуть меньше скругление */
-    padding: 20px;
-    box-shadow: var(--shadow-light);
-    /* Убедимся, что цвет текста панели тоже из темы */
-    color: var(--tma-text-color);
-}
-
-/* --- Левая колонка: Кликер --- */
-.score-panel {
-    text-align: center;
-}
-
-.user-greeting {
-    font-size: 0.9em;
-    color: var(--tma-hint-color);
-    margin-bottom: 10px;
-    min-height: 1.2em; /* Резервируем место */
-}
-
-.score-display {
-    font-size: 3em; /* Чуть меньше */
-    font-weight: bold;
-    color: var(--color-score);
-    margin-bottom: 8px;
-    font-family: var(--font-secondary);
-}
-
-.score-display span {
-    display: inline-block;
-    transition: color 0.3s ease;
-}
-
-.stats-display {
-    font-size: 0.85em;
-    color: var(--tma-hint-color); /* Используем цвет подсказок ТГ */
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.pizza-panel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    position: relative;
-    min-height: 200px; /* Меньше */
-    overflow: visible; /* Разрешаем частицам вылетать */
-}
-
-#interactive-area {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#pizza-container {
-    position: relative;
-    z-index: 1;
-}
-
-.pizza {
-    font-size: 110px; /* Меньше */
-    cursor: pointer;
-    border: none;
-    background: none;
-    padding: 5px;
-    transition: transform 0.1s ease-out;
-    display: inline-block;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pizza:hover {
-    transform: scale(1.05);
-}
-
-.pizza:active {
-    transform: scale(0.95);
-}
-
-.pizza.clicked {
-    animation: pizza-pop 0.2s ease-out;
-}
-
-@keyframes pizza-pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(0.95); }
-}
-
-.pizza-particle {
-    position: absolute;
-    font-size: 16px;
-    pointer-events: none;
-    opacity: 1;
-    animation: fly-out 0.7s ease-out forwards;
-    z-index: 0;
-}
-
-@keyframes fly-out {
-    0% { opacity: 1; transform: translate(0, 0) scale(1); }
-    100% { opacity: 0; transform: translate(var(--tx, 0px), var(--ty, -80px)) scale(0.5); }
-}
-
-.golden-pizza {
-    position: absolute;
-    font-size: 35px;
-    cursor: pointer;
-    filter: drop-shadow(0 0 8px var(--color-golden-pizza));
-    animation: pulse 1.5s infinite ease-in-out, appear 0.5s ease-out;
-    z-index: 10;
-    transition: transform 0.2s ease;
-}
-.golden-pizza:hover { transform: scale(1.15); }
-.golden-pizza:active { transform: scale(0.9); }
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-@keyframes appear {
-     0% { opacity: 0; transform: scale(0.5);}
-     100% { opacity: 1; transform: scale(1); }
-}
-
-.reset-btn {
-    background-color: var(--tma-hint-color); /* Цвет подсказок для кнопки сброса */
-    color: var(--tma-secondary-bg-color); /* Цвет вторичного фона для текста */
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s ease, filter 0.2s ease;
-    align-self: center;
-    margin-top: 10px;
-}
-.reset-btn:hover {
-    filter: brightness(1.1);
-}
-
-/* --- Правая колонка: Улучшения и Достижения --- */
-.side-column {
-    /* Можно настроить поведение на маленьких экранах при необходимости */
-}
-
-.upgrades-panel, .achievements-panel {
-    flex-grow: 1;
-}
-
-#upgrades-list, #achievements-list {
-    max-height: 300px; /* Ограничиваем высоту */
-    overflow-y: auto;
-    padding-right: 8px; /* Место для скроллбара */
-}
-
-/* Стилизация скроллбара */
-#upgrades-list::-webkit-scrollbar, #achievements-list::-webkit-scrollbar {
-    width: 6px;
-}
-#upgrades-list::-webkit-scrollbar-track, #achievements-list::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-}
-#upgrades-list::-webkit-scrollbar-thumb {
-    background: var(--tma-button-color, var(--color-accent));
-    border-radius: 3px;
-}
-#achievements-list::-webkit-scrollbar-thumb {
-    background: var(--color-achievement-unlocked);
-    border-radius: 3px;
-}
-
-/* Улучшения */
-#upgrades-list {
+.item-card, .upgrade-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Меньше отступ */
-}
-
-.upgrade-item {
-    /* Используем вторичный фон ТГ, если основной фон отличается */
-    /* background-color: var(--color-upgrade-bg); */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Тонкая граница */
-    border-radius: 10px;
-    padding: 12px;
-    display: flex;
     align-items: center;
-    gap: 12px;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-    position: relative; /* Для подсказок */
-}
-.upgrade-item:hover {
-   box-shadow: var(--shadow-medium);
-   transform: translateY(-2px);
-}
-
-.upgrade-icon {
-    font-size: 2.2em;
-    flex-shrink: 0;
-}
-.upgrade-icon.purchased { animation: icon-pop 0.4s ease-out; }
-
-.upgrade-details { flex-grow: 1; }
-.upgrade-name { font-weight: bold; font-size: 1em; margin-bottom: 2px; }
-.upgrade-description { font-size: 0.8em; color: var(--tma-hint-color); margin-bottom: 4px; }
-.upgrade-level, .upgrade-effect { font-size: 0.75em; color: var(--tma-hint-color); opacity: 0.8;}
-
-.upgrade-buy-button {
-    background-color: var(--tma-button-color, var(--color-accent));
-    color: var(--tma-button-text-color, white);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 12px; /* Меньше кнопка */
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9em;
-    transition: background-color 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.upgrade-buy-button:hover:not(:disabled) {
-    filter: brightness(1.1); /* Эффект при наведении для ТГ кнопок */
-}
-.upgrade-buy-button:disabled {
-    background-color: var(--color-upgrade-disabled);
-    color: #7f8c8d; /* Текст для неактивной кнопки */
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-.upgrade-cost { display: block; font-size: 0.8em; font-weight: normal; margin-top: 2px; }
-
-@keyframes icon-pop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-@keyframes shake { /* Анимация тряски при нехватке средств */
-  0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); } 20%, 40%, 60%, 80% { transform: translateX(4px); }
-}
-
-
-/* Достижения */
-.achievements-panel { min-height: 120px; }
-
-#achievements-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); /* Компактнее */
-    gap: 8px;
-    padding: 5px;
-}
-
-.achievement-item {
-    /* background-color: var(--color-achievement-bg); */ /* Можно убрать, если фон панели подходит */
-    border: 1px solid var(--tma-hint-color);
-    border-radius: 8px;
-    padding: 5px;
     text-align: center;
-    cursor: help;
-    transition: transform 0.2s ease, border-color 0.3s ease;
-    position: relative;
-    aspect-ratio: 1 / 1; /* Делаем квадратными */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-card:hover, .upgrade-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.item-card img, .upgrade-card img { /* Если будут картинки */
+    max-width: 60px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.item-card h3, .upgrade-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.item-card p, .upgrade-card p {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+.item-card .price, .upgrade-card .cost {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 10px;
+    color: var(--accent-color);
+}
+
+/* Кнопки */
+button {
+    font-family: var(--font-family);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.action-button, .buy-button, .sell-button, .upgrade-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    width: 100%;
+    margin-top: 10px;
+}
+
+.action-button:hover, .buy-button:hover, .sell-button:hover, .upgrade-button:hover {
+    background-color: var(--accent-color-dark); /* Пример */
+}
+
+.action-button {
+    padding: 15px;
+    font-size: 1.1rem;
+    margin-top: 20px;
+}
+
+
+/* Навигация */
+.navigation {
+    position: fixed; /* Фиксируем внизу */
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
+    justify-content: space-around;
+    background-color: var(--card-bg);
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-button {
+    background: none;
+    color: var(--text-color-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75rem;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.nav-button.active {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Слоты для фермы */
+.rig-slots-container {
+     display: grid;
+     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+     gap: 10px;
+     margin-top: 20px;
+}
+
+.slot {
+    background-color: var(--card-bg);
+    border: 1px dashed var(--text-color-secondary);
+    border-radius: var(--border-radius);
+    padding: 20px 10px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
-.achievement-item:hover { transform: translateY(-2px); }
-
-.achievement-icon {
-    font-size: 1.6em;
-    display: block;
-    filter: grayscale(1);
-    opacity: 0.6;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+.slot:hover {
+     background-color: rgba(0,0,0, 0.05);
 }
 
-.achievement-item.unlocked { border-color: var(--color-achievement-unlocked); }
-.achievement-item.unlocked .achievement-icon { filter: grayscale(0); opacity: 1; }
+.slot.filled {
+    border-style: solid;
+    border-color: var(--accent-color);
+    color: var(--text-color);
+}
+.slot-item-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+.slot-item-stats {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+}
 
-/* Уведомление о достижении */
-.achievement-toast {
-    position: fixed;
-    bottom: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--color-toast-bg);
-    color: var(--color-toast-text);
-    padding: 12px 20px; /* Меньше */
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+
+/* Стили для рынка (табы) */
+.market-tabs {
     display: flex;
-    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
     gap: 10px;
-    font-family: var(--font-primary);
-    font-size: 1em; /* Меньше */
-    transition: bottom 0.5s ease-in-out;
-    max-width: 90%;
 }
-.achievement-toast.show { bottom: 20px; /* Ближе к низу */}
-.toast-icon { font-size: 1.3em; }
-
-/* --- Адаптивность --- */
-@media (max-width: 650px) { /* Раньше переключаем на колонку */
-    body { padding: 10px; }
-    .game-wrapper { flex-direction: column; gap: 15px; }
-    .column { min-width: unset; width: 100%; }
-    .side-column {
-        flex-direction: row; /* Панели рядом, если помещаются */
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-     .upgrades-panel, .achievements-panel {
-        flex-basis: calc(50% - 5px); /* По 2 в ряд */
-        flex-grow: 1;
-     }
-    h1 { font-size: 1.8em; }
-    .score-display { font-size: 2.6em; }
-    .pizza { font-size: 100px; }
-    #interactive-area { width: 120px; height: 120px;}
-    #upgrades-list { max-height: 250px; }
-    #achievements-list { max-height: 150px; }
-    .upgrade-item { flex-direction: column; align-items: stretch; text-align: center; gap: 8px;}
-    .upgrade-icon { align-self: center;}
-    .upgrade-buy-button { align-self: stretch; /* Кнопка на всю ширину */}
+.tab-button {
+    background-color: var(--card-bg);
+    color: var(--text-color-secondary);
+    padding: 8px 20px;
+}
+.tab-button.active {
+    background-color: var(--accent-color);
+    color: var(--button-text);
+    font-weight: 700;
+}
+.market-tab-content {
+    display: none;
+}
+.market-tab-content.active {
+    display: grid; /* Или block, если не сетка */
 }
 
-@media (max-width: 400px) {
-     .side-column { flex-direction: column; } /* Снова в колонку на очень маленьких */
-     .upgrades-panel, .achievements-panel { flex-basis: auto; }
-     #achievements-list { grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); }
-     .achievement-icon { font-size: 1.4em; }
-     .pizza { font-size: 90px; }
-      #interactive-area { width: 100px; height: 100px;}
-     .score-display { font-size: 2.4em; }
-     h1 { font-size: 1.6em; }
-     h2 { font-size: 1.4em; }
-}
+/* Дополнительные стили для красоты */
+/* ... градиенты, тени, анимации ... */
