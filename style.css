@@ -1,269 +1,803 @@
-/* Базовые стили и переменные (можно использовать переменные темы ТГ) */
+/* --- Базовые стили и переменные Темы --- */
 :root {
-    --tg-theme-bg-color: #212121; /* Пример */
-    --tg-theme-text-color: #ffffff; /* Пример */
-    --tg-theme-button-color: #5288c1; /* Пример */
-    --tg-theme-button-text-color: #ffffff; /* Пример */
-    --tg-theme-secondary-bg-color: #181818; /* Пример */
+    /* Переменные темы Telegram (будут переопределены JS) */
+    --tg-theme-bg-color: var(--tg-bg-color, #ffffff);
+    --tg-theme-text-color: var(--tg-text-color, #000000);
+    --tg-theme-hint-color: var(--tg-hint-color, #999999);
+    --tg-theme-link-color: var(--tg-link-color, #2481cc);
+    --tg-theme-button-color: var(--tg-button-color, #2481cc);
+    --tg-theme-button-text-color: var(--tg-button-text-color, #ffffff);
+    --tg-theme-secondary-bg-color: var(--tg-secondary-bg-color, #f1f1f1);
 
+    /* Пользовательские переменные */
     --app-padding: 15px;
-    --border-radius: 10px;
-    --accent-color: #6200ea;
-    --accent-color-dark: #3700b3;
-    --text-color-secondary: #aaaaaa;
-    --font-family: 'Inter', sans-serif;
-    --bg-color: var(--tg-theme-bg-color, #f4f4f9);
-    --text-color: var(--tg-theme-text-color, #121212);
-    --card-bg: var(--tg-theme-secondary-bg-color, #ffffff);
-    --button-bg: var(--tg-theme-button-color, var(--accent-color));
-    --button-text: var(--tg-theme-button-text-color, #ffffff);
+    --border-radius: 12px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --accent-color: var(--tg-theme-button-color); /* Использовать цвет кнопки ТГ как акцентный */
+    --accent-color-dark: color-mix(in srgb, var(--accent-color) 85%, black); /* Затемненный акцентный */
+    --text-color-secondary: var(--tg-theme-hint-color); /* Цвет подсказок ТГ */
+    --bg-color: var(--tg-theme-bg-color); /* Основной фон ТГ */
+    --text-color: var(--tg-theme-text-color); /* Основной текст ТГ */
+    --card-bg: var(--tg-theme-secondary-bg-color); /* Вторичный фон ТГ для карточек */
+    --button-bg: var(--tg-theme-button-color); /* Фон кнопок ТГ */
+    --button-text: var(--tg-theme-button-text-color); /* Текст кнопок ТГ */
+    --danger-color: #f44336; /* Красный для ошибок/опасности */
+    --warning-color: #ff9800; /* Оранжевый для предупреждений */
+    --success-color: #4caf50; /* Зеленый для успеха */
+    --info-color: #2196f3; /* Синий для информации */
+
+    /* Пороги для стилизации износа */
+    --wear-warning-threshold: 50; /* % износа для желтого цвета */
+    --wear-danger-threshold: 80;  /* % износа для красного цвета и пульсации */
 }
 
-/* Сброс и базовые настройки */
+/* --- Сброс и Базовые настройки --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* Плавные переходы для всех элементов (можно убрать, если влияет на производительность) */
+    /* transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; */
 }
 
 html {
-    font-size: 16px; /* Базовый размер для rem */
+    font-size: 16px; /* Базовый размер шрифта */
 }
 
 body {
     font-family: var(--font-family);
     background-color: var(--bg-color);
     color: var(--text-color);
-    overscroll-behavior: none; /* Предотвратить "потягивание" страницы */
+    overscroll-behavior: none; /* Отключить "потягивание" страницы */
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: transparent; /* Убрать подсветку при тапе */
+    -webkit-tap-highlight-color: transparent; /* Убрать подсветку при тапе на мобильных */
+    line-height: 1.5; /* Базовый межстрочный интервал */
+    -webkit-font-smoothing: antialiased; /* Улучшенное сглаживание шрифтов в Webkit */
+	-moz-osx-font-smoothing: grayscale; /* Улучшенное сглаживание шрифтов в Firefox */
 }
 
 .app {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Или использовать viewport height ТГ */
+    min-height: 100vh; /* Занять всю высоту видимой области */
     max-width: 100%;
-    overflow: hidden; /* Предотвратить горизонтальный скролл */
+    overflow: hidden; /* Предотвратить горизонтальный скролл на уровне всего приложения */
 }
 
-/* Верхняя панель */
+/* --- Верхняя панель Статуса --- */
 .status-bar {
     display: flex;
-    justify-content: space-between; /* Распределить элементы */
+    flex-wrap: wrap; /* Разрешить перенос секций на новую строку */
+    justify-content: space-between; /* Распределить секции по ширине */
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.1); /* Полупрозрачный фон */
-    padding: 10px var(--app-padding);
-    font-size: 0.8rem;
-    flex-wrap: wrap; /* Перенос на новую строку если не влезает */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: color-mix(in srgb, var(--card-bg) 85%, transparent); /* Полупрозрачный фон */
+    backdrop-filter: blur(5px); /* Эффект размытия под панелью */
+    padding: 5px var(--app-padding);
+    font-size: 0.75rem; /* Уменьшенный шрифт для компактности */
+    border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color) 50%, transparent); /* Полупрозрачная граница */
+    position: sticky; /* Прилипает к верху при скролле */
+    top: 0;
+    z-index: 10;
+    gap: 10px; /* Отступы между секциями */
 }
 
-.status-bar > div {
-    margin: 2px 5px; /* Небольшие отступы */
+.status-section {
+    display: flex;
+    flex-wrap: wrap; /* Разрешить перенос элементов внутри секции */
+    gap: 8px; /* Отступы между элементами в секции */
+    align-items: center;
+}
+
+.status-wallet {
+    flex-grow: 1; /* Секция кошелька может занимать больше места */
+    justify-content: flex-start; /* Выровнять элементы кошелька по левому краю */
+}
+.status-rig {
+    justify-content: center; /* Выровнять элементы фермы по центру */
+}
+.status-user {
+     justify-content: flex-end; /* Выровнять пользователя по правому краю */
+}
+
+
+.wallet-item,
+.status-item {
     display: flex;
     align-items: center;
-    gap: 5px; /* Расстояние между иконкой и текстом */
+    gap: 4px; /* Отступ между иконкой и текстом */
+    white-space: nowrap; /* Предотвратить перенос текста внутри элемента */
+    padding: 2px 4px; /* Небольшие внутренние отступы */
+    border-radius: 4px; /* Скругление углов */
 }
 
-.currency-icon, .hash-icon, .power-icon {
-    font-size: 1rem;
+.wallet-item .icon,
+.status-item .icon {
+    font-size: 1rem; /* Размер иконок */
+    opacity: 0.9; /* Слегка приглушить иконки */
 }
 
-.user-info {
+.wallet-item.main-currency {
+    font-weight: 700; /* Выделить основную валюту */
+    background-color: color-mix(in srgb, var(--accent-color) 15%, transparent); /* Легкий фон для основной валюты */
+    color: var(--accent-color); /* Цвет акцента */
+}
+
+#power-cost {
+    color: var(--danger-color); /* Цвет стоимости энергии */
     font-weight: 600;
 }
 
-/* Основная область */
-.content {
-    flex-grow: 1; /* Занимает все доступное пространство */
-    padding: var(--app-padding);
-    overflow-y: auto; /* Вертикальный скролл для контента */
-    padding-bottom: 80px; /* Отступ снизу для нав. панели */
+.status-item.mining-target {
+    background-color: color-mix(in srgb, var(--text-color) 5%, transparent); /* Легкий фон для цели майнинга */
+    font-weight: 600;
+}
+.status-item.mining-target span {
+    color: var(--accent-color); /* Подсветить название монеты */
 }
 
-.screen {
-    display: none; /* Скрыты по умолчанию */
-    animation: fadeIn 0.3s ease-in-out;
+
+.status-item.pool {
+    font-style: italic; /* Курсив для названия пула */
+    color: var(--text-color-secondary);
+}
+.status-item.user-info span{
+    font-weight: 600;
 }
 
-.screen.active {
-    display: block; /* Показать активный экран */
+
+/* --- Баннер Событий --- */
+.event-banner {
+    background-color: var(--info-color);
+    color: white; /* Белый текст на синем фоне */
+    padding: 8px var(--app-padding);
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: sticky;
+     /* Позиционируем под статус баром (высота бара может меняться, лучше не задавать жестко) */
+     /* Если статус-бар всегда одной высоты, можно top: [высота_бара]px; */
+    top: 0; /* Может перекрываться статус-баром, если у него нет фона */
+    z-index: 9; /* Ниже статус-бара */
+    animation: fadeInDown 0.5s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+.event-banner .icon {
+    margin-right: 8px; /* Отступ у иконки события */
+    vertical-align: middle;
+}
+
+/* Анимация появления баннера */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-100%); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Основная область Контента --- */
+.content {
+    flex-grow: 1; /* Занять все доступное пространство */
+    padding: var(--app-padding);
+    overflow-y: auto; /* Вертикальный скролл только для контента */
+    padding-bottom: 80px; /* Отступ снизу, чтобы контент не перекрывался навигацией */
+    scroll-behavior: smooth; /* Плавная прокрутка (если нужна) */
+}
+
+.screen {
+    display: none; /* Скрываем неактивные экраны */
+    animation: fadeIn 0.3s ease-in-out; /* Анимация появления */
+}
+
+.screen.active {
+    display: block; /* Показываем активный экран */
+}
+
+/* Анимация плавного появления */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Заголовки секций */
 h2 {
-    margin-bottom: 20px;
-    font-size: 1.4rem;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--text-color);
     text-align: center;
 }
-
-/* Стили для списков (магазин, инвентарь, рынок) */
-.item-list, .upgrade-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Адаптивная сетка */
-    gap: 15px;
+h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+/* Горизонтальный разделитель */
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--tg-theme-hint-color);
+    margin: 25px 0;
+    opacity: 0.3; /* Сделать разделитель менее заметным */
 }
 
-.item-card, .upgrade-card {
+/* --- Сетка для карточек (Магазин, Инвентарь, Рынок, Пулы, Улучшения) --- */
+.item-grid,
+.upgrade-list,
+.pool-list {
+    display: grid;
+    /* Адаптивные колонки: минимум 170px, максимум 1 фракция */
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px; /* Отступы между карточками */
+}
+
+/* --- Карточка Компонента / Улучшения --- */
+.item-card,
+.upgrade-card {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
     padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-direction: column; /* Элементы внутри карточки - в столбец */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Плавные эффекты при наведении */
+    overflow: hidden; /* Скрыть вылезающее содержимое */
+    position: relative; /* Для позиционирования дочерних элементов, если нужно */
 }
 
-.item-card:hover, .upgrade-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+.item-card:hover,
+.upgrade-card:hover {
+    transform: translateY(-4px); /* Легкий подъем при наведении */
+    box-shadow: var(--card-shadow-hover); /* Увеличенная тень при наведении */
 }
 
-.item-card img, .upgrade-card img { /* Если будут картинки */
-    max-width: 60px;
-    height: auto;
-    margin-bottom: 10px;
+.item-image {
+    max-width: 80px;
+    height: 80px;
+    object-fit: contain; /* Масштабировать изображение, сохраняя пропорции */
+    margin: 0 auto 15px auto; /* Центрировать изображение и отступ снизу */
+    display: block;
+    user-select: none; /* Запретить выделение картинки */
 }
 
-.item-card h3, .upgrade-card h3 {
+.item-name {
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 8px;
+    text-align: center;
+    color: var(--text-color);
+    min-height: 2.4em; /* Резервируем место под 2 строки названия */
+    line-height: 1.2em;
+    overflow: hidden; /* Обрезать длинные названия (можно добавить text-overflow: ellipsis) */
 }
 
-.item-card p, .upgrade-card p {
+.item-stats {
+    margin-bottom: 8px; /* Отступ под статами */
+}
+
+.item-stats p,
+.upgrade-card p {
     font-size: 0.85rem;
     color: var(--text-color-secondary);
-    margin-bottom: 5px;
-    line-height: 1.3;
+    margin-bottom: 4px;
+    line-height: 1.4;
+    text-align: center;
 }
 
-.item-card .price, .upgrade-card .cost {
-    font-size: 0.9rem;
+.item-stats p .icon,
+.upgrade-card p .icon {
+    margin-right: 4px; /* Отступ у иконок в статах */
+    opacity: 0.8;
+}
+
+/* Стилизация индикатора износа */
+.item-wear {
+    font-size: 0.8rem;
+    margin-top: 8px;
+    text-align: center;
     font-weight: 600;
-    margin-top: 10px;
-    color: var(--accent-color);
+    padding: 2px 5px;
+    border-radius: 4px;
+    background-color: color-mix(in srgb, var(--text-color) 5%, transparent); /* Легкий фон */
+    color: var(--text-color-secondary); /* Базовый цвет */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход цвета */
 }
 
-/* Кнопки */
-button {
+.item-wear.warning {
+    background-color: color-mix(in srgb, var(--warning-color) 20%, transparent);
+    color: var(--warning-color); /* Цвет предупреждения */
+}
+
+.item-wear.danger {
+    background-color: color-mix(in srgb, var(--danger-color) 20%, transparent);
+    color: var(--danger-color); /* Цвет опасности */
+    animation: pulse 1.5s infinite ease-in-out; /* Анимация пульсации */
+}
+
+/* Анимация пульсации для сильного износа */
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.03); }
+}
+
+/* Цена и стоимость */
+.item-price,
+.upgrade-card .cost {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 12px;
+    color: var(--accent-color); /* Акцентный цвет для цены */
+    text-align: center;
+}
+
+/* Контейнер для кнопок действий в карточке */
+.item-actions {
+    margin-top: auto; /* Прижать кнопки к низу карточки */
+    padding-top: 15px; /* Отступ сверху перед кнопками */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Отступы между кнопками */
+}
+
+/* --- Кнопки, Селекты, Инпуты --- */
+button, select, input[type="number"] {
     font-family: var(--font-family);
-    border: none;
-    border-radius: var(--border-radius);
+    border-radius: 8px; /* Скругление */
     padding: 10px 15px;
-    cursor: pointer;
     font-size: 0.9rem;
+    border: 1px solid var(--tg-theme-hint-color);
+    background-color: var(--card-bg); /* Фон как у карточек */
+    color: var(--text-color);
+    transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease, border-color 0.2s ease;
+    width: 100%; /* Занимать всю ширину родителя по умолчанию */
+    text-align: center; /* Центрировать текст */
+}
+button:focus, select:focus, input:focus {
+    outline: none;
+    border-color: var(--accent-color); /* Подсветка рамки при фокусе */
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 30%, transparent); /* Легкое свечение */
+}
+
+
+button {
+    cursor: pointer;
+    border: none; /* Убираем рамку у кнопок по умолчанию */
+    background: none; /* Убираем фон у кнопок по умолчанию */
+    color: var(--tg-theme-link-color); /* Цвет ссылки для текстовых кнопок */
     font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+button:hover {
+    opacity: 0.8; /* Легкое затемнение при наведении */
 }
 
 button:active {
-    transform: scale(0.97);
+    transform: scale(0.97); /* Небольшое сжатие при нажатии */
+    opacity: 1;
 }
 
-.action-button, .buy-button, .sell-button, .upgrade-button {
+/* Стили для заблокированных кнопок */
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+    opacity: 0.5 !important; /* Явное указание прозрачности */
+    cursor: not-allowed;
+    transform: none !important;
+    background-color: var(--tg-theme-hint-color) !important; /* Серый фон */
+    color: var(--tg-theme-secondary-bg-color) !important; /* Светлый текст */
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Стилизация Select */
+select {
+    cursor: pointer;
+    padding-right: 30px; /* Место для стрелки */
+    appearance: none; /* Убрать стандартную стрелку */
+    /* Кастомная стрелка */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23${(var(--text-color-secondary) || '#999999').substring(1)}' d='M6 8L0 2l1.4-1.4L6 5.2l4.6-4.6L12 2z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    text-align: left; /* Текст слева */
+    text-align-last: left; /* Текст слева для Firefox */
+}
+
+input[type="number"] {
+    width: 100%;
+    text-align: right; /* Цифры обычно справа */
+}
+/* Убрать стрелки у input[type=number] (опционально) */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+
+/* Основные кнопки действий (с фоном) */
+.action-button,
+.buy-button,
+.sell-button,
+.upgrade-button,
+.install-button,
+.remove-button,
+.list-market-button,
+.delist-button,
+.repair-button,
+.pool-action-button {
     background-color: var(--button-bg);
     color: var(--button-text);
     width: 100%;
-    margin-top: 10px;
+    border: none;
+    font-weight: 600;
+}
+.action-button:hover,
+.buy-button:hover,
+.sell-button:hover,
+.upgrade-button:hover,
+.install-button:hover,
+.remove-button:hover,
+.list-market-button:hover,
+.delist-button:hover,
+.repair-button:hover,
+.pool-action-button:hover {
+    background-color: var(--accent-color-dark); /* Затемненный фон при наведении */
+    opacity: 1;
 }
 
-.action-button:hover, .buy-button:hover, .sell-button:hover, .upgrade-button:hover {
-    background-color: var(--accent-color-dark); /* Пример */
+/* Кнопки с особыми цветами */
+.remove-button,
+.delist-button {
+    background-color: var(--warning-color);
+}
+.remove-button:hover,
+.delist-button:hover {
+    background-color: color-mix(in srgb, var(--warning-color) 85%, black);
 }
 
-.action-button {
-    padding: 15px;
-    font-size: 1.1rem;
-    margin-top: 20px;
+.repair-button {
+    background-color: var(--info-color);
+}
+.repair-button:hover {
+    background-color: color-mix(in srgb, var(--info-color) 85%, black);
 }
 
+.pool-action-button.leave { /* Кнопка "Выйти из пула" */
+    background-color: var(--danger-color);
+}
+.pool-action-button.leave:hover {
+    background-color: color-mix(in srgb, var(--danger-color) 85%, black);
+}
 
-/* Навигация */
+/* --- Нижняя панель Навигации --- */
 .navigation {
     position: fixed; /* Фиксируем внизу */
     bottom: 0;
     left: 0;
     right: 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around; /* Равномерное распределение кнопок */
     background-color: var(--card-bg);
     padding: 10px 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1); /* Тень сверху */
+    border-top: 1px solid color-mix(in srgb, var(--tg-theme-hint-color) 50%, transparent); /* Полупрозрачная граница сверху */
+    z-index: 20; /* Выше контента */
 }
 
 .nav-button {
     background: none;
+    border: none;
     color: var(--text-color-secondary);
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Иконка над текстом */
     align-items: center;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Очень маленький шрифт */
     padding: 5px;
     border-radius: 5px;
+    flex: 1; /* Равномерно занять пространство */
+    text-align: center;
+    line-height: 1.2; /* Уменьшить межстрочный интервал */
+    transition: color 0.2s ease; /* Плавный переход цвета */
+}
+.nav-button:hover {
+     color: var(--text-color); /* Затемнять при наведении */
+     opacity: 1;
 }
 
 .nav-button.active {
-    color: var(--accent-color);
+    color: var(--accent-color); /* Акцентный цвет для активной кнопки */
     font-weight: 700;
 }
 
-/* Слоты для фермы */
-.rig-slots-container {
-     display: grid;
-     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-     gap: 10px;
-     margin-top: 20px;
-}
-
-.slot {
-    background-color: var(--card-bg);
-    border: 1px dashed var(--text-color-secondary);
-    border-radius: var(--border-radius);
-    padding: 20px 10px;
-    min-height: 80px;
+/* --- Стили для Экрана Фермы --- */
+.mining-select-container {
+    margin-bottom: 20px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--text-color-secondary);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.slot:hover {
-     background-color: rgba(0,0,0, 0.05);
+    gap: 10px;
+    justify-content: center;
 }
 
-.slot.filled {
-    border-style: solid;
-    border-color: var(--accent-color);
-    color: var(--text-color);
-}
-.slot-item-name {
+.mining-select-container label {
     font-weight: 600;
     font-size: 0.9rem;
-    margin-bottom: 5px;
-}
-.slot-item-stats {
-    font-size: 0.75rem;
     color: var(--text-color-secondary);
 }
+#mining-coin-select {
+     width: auto; /* Не растягивать селект */
+     padding: 8px 30px 8px 12px; /* Компактный селект */
+     font-weight: 600;
+}
+
+/* Слоты для Mobo и PSU */
+.farm-overview {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.farm-component-slot {
+    text-align: center;
+    flex: 1; /* Попытаться занять равное место */
+    min-width: 150px; /* Минимальная ширина слота */
+}
+
+.farm-component-slot .slot-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 5px;
+}
+
+.farm-component-slot .slot {
+    background-color: var(--card-bg);
+    border: 2px dashed var(--tg-theme-hint-color);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    min-height: 80px; /* Минимальная высота слота */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.farm-component-slot .slot.empty:hover {
+    background-color: color-mix(in srgb, var(--card-bg) 90%, black); /* Затемнение при наведении на пустой */
+    border-color: var(--text-color-secondary);
+}
+
+/* Убираем рамку и фон у слота, когда он заполнен карточкой */
+.farm-component-slot .slot:not(.empty) {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: default;
+    min-height: auto; /* Высота определяется картой */
+}
+
+/* Убираем эффекты у карточки внутри слота Mobo/PSU */
+.farm-component-slot .item-card {
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    transition: none; /* Убрать transition */
+}
+.farm-component-slot .item-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+/* Уменьшаем кнопки внутри слотов Mobo/PSU */
+.farm-component-slot .item-card .remove-button,
+.farm-component-slot .item-card .repair-button {
+     font-size: 0.8rem;
+     padding: 4px 8px;
+     margin-top: 5px;
+}
+
+/* Контейнер для слотов GPU */
+.rig-slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* Как остальные сетки */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Стилизация слота GPU (использует основу .item-card) */
+.gpu-slot {
+    /* Наследует стили .item-card */
+    border: 2px dashed var(--tg-theme-hint-color); /* Рамка для пустого слота */
+    min-height: 200px; /* Минимальная высота пустого слота */
+    justify-content: center; /* Центрировать текст "Пустой слот" */
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.gpu-slot.empty:hover {
+    background-color: color-mix(in srgb, var(--card-bg) 90%, black);
+    border-color: var(--text-color-secondary);
+}
 
 
-/* Стили для рынка (табы) */
+/* Скрываем элементы карточки в пустом слоте GPU */
+.gpu-slot.empty .item-image,
+.gpu-slot.empty .item-name,
+.gpu-slot.empty .item-stats,
+.gpu-slot.empty .item-wear,
+.gpu-slot.empty .item-actions {
+    display: none;
+}
+
+/* Показываем текст-плейсхолдер в пустом слоте */
+.gpu-slot.empty .placeholder-text {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Стили для заполненного слота GPU */
+.gpu-slot.filled {
+    border-style: solid;
+    border-color: var(--accent-color);
+    cursor: default;
+}
+/* Скрываем плейсхолдер в заполненном слоте */
+.gpu-slot.filled .placeholder-text {
+    display: none;
+}
+
+/* Статус майнинга (доходность) */
+.mining-status {
+    margin-top: 30px;
+    text-align: center;
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+.mining-status p {
+    margin-bottom: 0; /* Убрать отступ, если только одна строка */
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+}
+.mining-status p span {
+    color: var(--text-color);
+    font-weight: 700; /* Выделить значения */
+}
+
+/* --- Стили для Экрана Рынка Криптовалют --- */
+.crypto-prices-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Уменьшить отступ */
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.crypto-price-item {
+    background-color: var(--card-bg);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Легкая тень */
+    border: 1px solid transparent; /* Для анимации изменения */
+    transition: border-color 0.5s ease;
+}
+/* Анимация при изменении цены */
+.crypto-price-item.changed {
+    border-color: var(--accent-color);
+}
+
+
+.crypto-icon {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.crypto-value {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.crypto-change {
+    font-size: 0.8rem;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.crypto-change.positive { color: var(--success-color); }
+.crypto-change.negative { color: var(--danger-color); }
+
+/* Контейнер и стили для графика */
+.crypto-chart-container {
+    margin-bottom: 25px;
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    position: relative; /* Для возможных доп. элементов */
+}
+.crypto-chart-container h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1rem; /* Уменьшить заголовок графика */
+    color: var(--text-color-secondary);
+}
+#crypto-chart {
+    max-height: 150px; /* Ограничить высоту */
+    width: 100%;
+}
+
+/* Форма обмена валют */
+.crypto-exchange {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+.crypto-exchange h3 {
+     text-align: center;
+}
+.exchange-form .form-group {
+    margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* Метка | Поле | Доступно */
+    gap: 10px;
+    align-items: center;
+}
+
+.exchange-form label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Не переносить метки */
+}
+
+.exchange-form input[type="number"] {
+    grid-column: 2 / 3; /* Инпут занимает центральную колонку */
+    padding: 8px 10px; /* Уменьшить padding */
+    font-size: 0.9rem;
+}
+.exchange-form select {
+     grid-column: 2 / 3; /* Селект тоже */
+     padding: 8px 30px 8px 10px;
+     font-size: 0.9rem;
+     text-align: left;
+     text-align-last: left;
+}
+
+.exchange-form span { /* "Доступно" и "Получите" */
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    text-align: right;
+}
+#exchange-to-amount { /* Выделение результата обмена */
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+#exchange-button {
+    margin-top: 10px;
+    padding: 12px; /* Крупная кнопка обмена */
+    font-size: 1rem;
+}
+
+/* --- Стили для Экрана Рынка Б/У --- */
 .market-tabs {
     display: flex;
     justify-content: center;
@@ -274,18 +808,209 @@ button:active {
     background-color: var(--card-bg);
     color: var(--text-color-secondary);
     padding: 8px 20px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px; /* Скругление табов */
+    font-weight: 600;
 }
 .tab-button.active {
     background-color: var(--accent-color);
     color: var(--button-text);
-    font-weight: 700;
+    border-color: var(--accent-color);
 }
 .market-tab-content {
-    display: none;
+    display: none; /* Скрываем неактивные вкладки */
 }
 .market-tab-content.active {
-    display: grid; /* Или block, если не сетка */
+    display: grid; /* Используем grid для контента вкладок */
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px;
+}
+/* Стилизация заголовков внутри вкладки "Продать" */
+#market-items-sell h3 {
+     grid-column: 1 / -1; /* Заголовок на всю ширину сетки */
+     text-align: center;
+     margin-top: 10px;
+     margin-bottom: 15px;
+     color: var(--text-color-secondary);
+     font-size: 1.1rem;
 }
 
-/* Дополнительные стили для красоты */
-/* ... градиенты, тени, анимации ... */
+
+/* --- Стили для Экрана Пулов и Улучшений --- */
+.pool-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pool-card:hover {
+     transform: translateY(-4px);
+     box-shadow: var(--card-shadow-hover);
+}
+
+
+.pool-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Отступ иконки от названия */
+    color: var(--text-color);
+}
+.pool-card h4 .pool-icon {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+.pool-card p {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    margin: 0; /* Убрать лишние отступы */
+}
+.pool-card .pool-description {
+    font-style: italic;
+    min-height: 2.4em; /* Место под 2 строки описания */
+    line-height: 1.2em;
+}
+
+.pool-card p span { /* Выделение числовых значений */
+     font-weight: 600;
+     color: var(--text-color);
+}
+
+.pool-card .pool-req {
+    font-weight: 600;
+    color: var(--warning-color); /* Цвет требований */
+}
+.pool-card .pool-req.met { /* Если требования выполнены */
+    color: var(--success-color);
+}
+
+
+.pool-action-button {
+    margin-top: auto; /* Прижать кнопку к низу */
+    padding-top: 10px; /* Отступ сверху */
+}
+/* Затемнение неактивного пула */
+.pool-card.disabled {
+     opacity: 0.6;
+     pointer-events: none; /* Отключить клики */
+}
+.pool-card.disabled:hover {
+     transform: none;
+     box-shadow: var(--card-shadow);
+}
+
+
+/* --- Модальные окна --- */
+.modal {
+    display: none; /* Скрыты по умолчанию */
+    position: fixed; /* Фиксированное позиционирование */
+    z-index: 100; /* Выше остального контента */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Скролл, если контент не влезает */
+    background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный темный фон */
+    animation: fadeInModal 0.3s ease; /* Анимация появления фона */
+}
+
+.modal-content {
+    background-color: var(--tg-theme-secondary-bg-color);
+    color: var(--tg-theme-text-color);
+    margin: 10% auto; /* Отступ сверху и авто центрирование по горизонтали */
+    padding: 25px;
+    border-radius: var(--border-radius);
+    max-width: 90%; /* Максимальная ширина на маленьких экранах */
+    width: 400px; /* Фиксированная ширина на больших */
+    position: relative; /* Для позиционирования кнопки закрытия */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: slideInModal 0.3s ease-out; /* Анимация появления окна */
+}
+
+.close-button {
+    color: var(--tg-theme-hint-color);
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+.close-button:hover,
+.close-button:focus {
+    color: var(--tg-theme-text-color);
+    text-decoration: none; /* Убрать подчеркивание */
+}
+
+.modal h4 { /* Заголовок модального окна */
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.modal p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+.modal p span { /* Выделение данных в тексте модалки */
+    font-weight: 600;
+    color: var(--text-color);
+}
+.modal label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.modal input[type="number"] {
+    margin-bottom: 15px;
+}
+.modal button { /* Кнопка действия в модалке */
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 1rem;
+}
+/* Выделение стоимости ремонта */
+#repair-cost {
+    color: var(--danger-color);
+    font-weight: 700;
+}
+
+/* Анимации для модальных окон */
+@keyframes fadeInModal { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideInModal { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- Прочее --- */
+.placeholder-text {
+    text-align: center;
+    color: var(--text-color-secondary);
+    padding: 20px;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Медиа-запросы для адаптивности (Пример) */
+@media (max-width: 600px) {
+     html { font-size: 15px; } /* Уменьшить базовый шрифт */
+    .status-bar { font-size: 0.7rem; gap: 5px; padding: 5px 10px; }
+    .status-section { gap: 5px; }
+    .nav-button { font-size: 0.65rem; }
+    .content { padding: 10px; padding-bottom: 70px; }
+    h2 { font-size: 1.4rem; margin-bottom: 20px;}
+    h3 { font-size: 1.1rem; margin-bottom: 10px;}
+    .item-grid, .upgrade-list, .pool-list { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .item-card, .upgrade-card, .pool-card { padding: 12px; }
+    .modal-content { width: 95%; margin: 15% auto; padding: 20px; }
+    .exchange-form .form-group { grid-template-columns: auto 1fr; } /* Метка сверху, поле снизу */
+    .exchange-form span { grid-column: 1 / -1; text-align: left; margin-top: -5px; } /* Доступно/Получите под полем */
+}
