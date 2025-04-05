@@ -3,171 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ-Панель - CryptoRig Tycoon</title>
-    <link rel="stylesheet" href="style.css"> <!-- Можно использовать тот же CSS или отдельный -->
-    <style>
-        /* Простые стили для админки */
-        #admin-panel { display: none; } /* Скрыта по умолчанию */
-        .admin-section {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-        }
-        .admin-section h3 { margin-top: 0; }
-        label { display: block; margin-bottom: 5px; }
-        input[type="text"], input[type="number"], input[type="url"], select {
-            width: 95%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-actions button { margin-right: 10px; }
-        #gpu-list li, #crypto-list li {
-            border-bottom: 1px dashed #eee;
-            padding: 5px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-         }
-         .list-actions button { font-size: 0.8em; padding: 2px 5px; }
-    </style>
+    <title>CryptoRig Tycoon - Симулятор Майнинга</title>
+    <link rel="stylesheet" href="style.css"> <!-- Подключаем CSS -->
 </head>
 <body>
 
     <header>
-        <h1>Админ-Панель</h1>
+        <h1>CryptoRig Tycoon</h1>
+        <nav>
+            <button data-section="dashboard-section" class="nav-button active">Панель</button>
+            <button data-section="market-section" class="nav-button">Рынок</button>
+            <button data-section="rig-management-section" class="nav-button">Управление Фермой</button>
+            <button data-section="admin-panel-section" class="nav-button">Админка</button> <!-- Кнопка для встроенной админки -->
+        </nav>
     </header>
 
-    <main id="admin-container" style="padding: 20px;">
+    <main id="game-container">
 
-        <!-- Форма Входа -->
-        <section id="login-section">
-            <h2>Вход в Админ-Панель</h2>
-            <form id="login-form">
-                <label for="admin-password">Пароль:</label>
-                <input type="password" id="admin-password" required>
-                <button type="submit" id="login-button">Войти</button>
-                <p id="login-error" style="color: red; display: none;">Неверный пароль!</p>
-            </form>
+        <!-- 1. Секция Главной Панели (Dashboard) -->
+        <section id="dashboard-section" class="game-section active-section">
+            <h2>Главная Панель</h2>
+            <div class="dashboard-grid">
+                <!-- Обзор Фермы (Визуализация) -->
+                <div id="farm-overview" class="dashboard-card">
+                    <h3>Визуализация Фермы</h3>
+                    <div class="rig-visualization">
+                        <p>Здесь будет визуальное представление вашей фермы...</p>
+                        <div class="rig-placeholder"></div>
+                        <div class="rig-placeholder"></div>
+                    </div>
+                </div>
+                <!-- Статистика -->
+                <div id="main-stats" class="dashboard-card">
+                    <h3>Статистика</h3>
+                    <ul>
+                        <li>Общий Хешрейт: <span id="current-hashrate">0</span> H/s</li>
+                        <li>Потребление: <span id="current-power">0</span> W</li>
+                        <li>Стоимость энергии (час): $<span id="energy-cost-hour">0.00</span></li>
+                        <li>Баланс: $<span id="fiat-balance">1000</span></li>
+                        <li>Добыто BTC: <span id="btc-balance">0.000000</span></li>
+                        <li>Добыто ETH: <span id="eth-balance">0.000000</span></li>
+                        <li>Температура (средняя): <span id="avg-temp">30</span>°C</li>
+                    </ul>
+                </div>
+                <!-- Курсы Криптовалют -->
+                <div id="crypto-prices" class="dashboard-card">
+                    <h3>Курсы Криптовалют</h3>
+                    <div class="crypto-chart-placeholder">
+                        <p>График BTC/USD: $<span id="btc-price">50000</span></p>
+                        <p>График ETH/USD: $<span id="eth-price">3000</span></p>
+                    </div>
+                    <button id="sell-all-crypto">Продать всю крипту</button>
+                </div>
+                 <!-- Журнал Событий -->
+                <div id="event-log" class="dashboard-card">
+                    <h3>Журнал Событий</h3>
+                    <ul id="log-output">
+                        <li>Игра началась!</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
-        <!-- Основная Панель Админа (скрыта до входа) -->
-        <div id="admin-panel">
-            <button id="logout-button" style="float: right;">Выйти</button>
-            <h2>Добро пожаловать, Админ!</h2>
+        <!-- 2. Секция Рынка Комплектующих -->
+        <section id="market-section" class="game-section">
+            <h2>Рынок Комплектующих</h2>
+            <div class="market-tabs">
+                <button data-market-tab="new" class="market-tab-button active">Новые</button>
+                <button data-market-tab="used" class="market-tab-button">Б/У Рынок</button>
+                <button data-market-tab="sell" class="market-tab-button">Продать Свои</button>
+            </div>
+            <!-- Вкладка: Новые комплектующие -->
+            <div id="market-new" class="market-tab-content active">
+                <h3>Новые Комплектующие</h3>
+                <div class="market-filters">
+                    <label>Сортировать: <select id="sort-new"><option value="price_asc">Цена ↑</option><option value="price_desc">Цена ↓</option><option value="hash_desc">Хешрейт ↓</option></select></label>
+                </div>
+                <div id="new-items-container" class="items-grid">
+                    <p>Загрузка новых комплектующих...</p>
+                </div>
+            </div>
+            <!-- Вкладка: Б/У Рынок -->
+            <div id="market-used" class="market-tab-content">
+                <h3>Б/У Рынок (Другие игроки)</h3>
+                 <div class="market-image-placeholder">
+                    <!-- Замените placeholder-market.jpg на реальное изображение или удалите -->
+                    <img src="placeholder-market.jpg" alt="Изображение Б/У рынка" style="max-width: 100%; height: auto; opacity: 0.7; display: block; margin: 0 auto;">
+                    <p style="text-align: center; color: #555;">Здесь кипит торговля...</p>
+                 </div>
+                 <div class="market-filters">
+                    <label>Модель: <input type="text" id="filter-used-model"></label>
+                    <label>Макс. Цена: $<input type="number" id="filter-used-maxprice"></label>
+                    <label>Сортировать: <select id="sort-used"><option value="price_asc">Цена ↑</option><option value="price_desc">Цена ↓</option><option value="wear_asc">Износ ↑</option></select></label>
+                 </div>
+                <div id="used-items-container" class="items-grid">
+                   <p>Поиск предложений на Б/У рынке...</p>
+                </div>
+            </div>
+            <!-- Вкладка: Продать свои комплектующие -->
+            <div id="market-sell" class="market-tab-content">
+                <h3>Продать Свои Комплектующие</h3>
+                <p>Выберите комплектующее из вашего инвентаря, чтобы выставить на Б/У рынок:</p>
+                <div id="sell-items-container" class="items-grid">
+                    <p>У вас пока нет комплектующих на продажу.</p>
+                </div>
+                <div id="sell-form" style="display: none;">
+                    <h4>Выставить на продажу: <span id="sell-item-name"></span></h4>
+                    <label>Желаемая цена: $<input type="number" id="sell-item-price" min="1"></label>
+                    <button id="confirm-sell-item">Выставить</button>
+                    <button id="cancel-sell-item">Отмена</button>
+                </div>
+            </div>
+        </section>
 
-            <!-- Управление Видеокартами -->
-            <section class="admin-section" id="gpu-management">
-                <h3>Управление Видеокартами</h3>
-                <button id="add-gpu-button">Добавить Новую Видеокарту</button>
-                <h4>Существующие Видеокарты:</h4>
-                <ul id="gpu-list">
-                    <!-- Сюда JS добавит список GPU -->
-                    <li>Загрузка...</li>
-                </ul>
+        <!-- 3. Секция Управления Фермой -->
+        <section id="rig-management-section" class="game-section">
+            <h2>Управление Фермой</h2>
+             <div class="rig-management-layout">
+                <div id="rig-display" class="rig-view">
+                    <h3>Ваши Стойки/Корпуса</h3>
+                    <!-- Динамически добавляемые слоты -->
+                    <div class="rig-slot-placeholder">Добавьте или выберите стойку...</div>
+                    <!-- <button>Добавить стойку</button> -->
+                </div>
+                <div id="inventory-display" class="inventory-view">
+                    <h3>Ваш Инвентарь (Видеокарты)</h3>
+                    <ul id="gpu-inventory-list">
+                        <li>Нет карт в инвентаре</li>
+                    </ul>
+                     <h3>Другие Компоненты</h3>
+                     <ul id="other-inventory-list">
+                        <li>Блок Питания (Базовый) - 1 шт.</li>
+                     </ul>
+                </div>
+                <div id="selected-item-actions" class="item-actions">
+                    <h3>Действия с Выбранным</h3>
+                    <p>Выберите карту или слот...</p>
+                </div>
+             </div>
+        </section>
 
-                <!-- Форма добавления/редактирования GPU (скрыта по умолчанию) -->
-                <form id="gpu-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
-                    <h4 id="gpu-form-title">Добавить Видеокарту</h4>
-                    <input type="hidden" id="gpu-id"> <!-- Для редактирования -->
+        <!-- 4. Секция Админ-Панели (Встроенная) -->
+        <section id="admin-panel-section" class="game-section">
+            <h2>Админ-Панель</h2>
 
-                    <label for="gpu-name">Название Модели:</label>
-                    <input type="text" id="gpu-name" required>
-
-                    <label for="gpu-hashrate-ethash">Базовый Хешрейт (Ethash, MH/s):</label>
-                    <input type="number" id="gpu-hashrate-ethash" step="0.1" required>
-
-                    <label for="gpu-hashrate-sha256">Базовый Хешрейт (SHA-256, GH/s):</label>
-                    <input type="number" id="gpu-hashrate-sha256" step="1" required>
-
-                    <label for="gpu-power">Энергопотребление (W):</label>
-                    <input type="number" id="gpu-power" required>
-
-                    <label for="gpu-price">Базовая Цена (Новая, $):</label>
-                    <input type="number" id="gpu-price" required>
-
-                    <label for="gpu-image-url">URL Изображения:</label>
-                    <input type="url" id="gpu-image-url" placeholder="https://example.com/image.jpg" required>
-
-                    <label for="gpu-stock">Начальный запас (шт.):</label>
-                    <input type="number" id="gpu-stock" value="10">
-
-                    <label for="gpu-wear-rate">Коэффициент износа (0.1 - 1.0):</label>
-                    <input type="number" id="gpu-wear-rate" step="0.01" min="0.01" max="1.0" value="0.1">
-
-                     <label for="gpu-requirements">Требования (текст):</label>
-                    <input type="text" id="gpu-requirements" placeholder="PCIe x16, 8-pin Power">
-
-                    <div class="form-actions">
-                        <button type="submit" id="save-gpu-button">Сохранить</button>
-                        <button type="button" id="cancel-gpu-button">Отмена</button>
-                    </div>
+            <!-- Форма Входа -->
+            <section id="login-section">
+                <h3>Вход</h3>
+                <form id="login-form">
+                    <label for="admin-password">Пароль:</label>
+                    <input type="password" id="admin-password" required>
+                    <button type="submit" id="login-button">Войти</button>
+                    <p id="login-error" style="color: red; display: none;">Неверный пароль!</p>
                 </form>
             </section>
 
-            <!-- Управление Криптовалютами -->
-            <section class="admin-section" id="crypto-management">
-                <h3>Управление Криптовалютами</h3>
-                 <button id="add-crypto-button">Добавить Криптовалюту</button>
-                 <h4>Существующие Криптовалюты:</h4>
-                 <ul id="crypto-list">
-                     <!-- Сюда JS добавит список криптовалют -->
-                 </ul>
-                 <!-- Форма для криптовалют (Аналогично GPU) -->
-                 <form id="crypto-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
-                     <h4 id="crypto-form-title">Добавить Криптовалюту</h4>
-                      <input type="hidden" id="crypto-id">
-                      <label for="crypto-name">Название:</label>
-                      <input type="text" id="crypto-name" required>
-                      <label for="crypto-ticker">Тикер (напр. BTC):</label>
-                      <input type="text" id="crypto-ticker" required>
-                      <label for="crypto-algorithm">Алгоритм Майнинга:</label>
-                      <select id="crypto-algorithm">
-                          <option value="ethash">Ethash</option>
-                          <option value="sha256">SHA-256</option>
-                          <!-- Добавить другие -->
-                      </select>
-                      <label for="crypto-base-price">Начальная цена ($):</label>
-                      <input type="number" id="crypto-base-price" step="0.01" required>
-                       <label for="crypto-volatility">Волатильность (0.0 - 1.0):</label>
-                       <input type="number" id="crypto-volatility" step="0.01" min="0" max="1.0" value="0.1">
-                       <div class="form-actions">
-                           <button type="submit" id="save-crypto-button">Сохранить</button>
-                           <button type="button" id="cancel-crypto-button">Отмена</button>
-                       </div>
-                 </form>
-            </section>
+            <!-- Основная Панель Админа (скрыта до входа JS-ом) -->
+            <div id="admin-panel" style="display: none;">
+                <button id="logout-button" style="float: right;">Выйти</button>
+                <h3>Управление</h3>
 
-            <!-- Настройки Рынка -->
-            <section class="admin-section" id="market-settings">
-                <h3>Настройки Рынка</h3>
-                <label for="market-bot-activity">Активность ботов на Б/У (0-10):</label>
-                <input type="number" id="market-bot-activity" min="0" max="10" value="5">
-                <label for="market-restock-freq">Частота пополнения новых (в игровых часах):</label>
-                <input type="number" id="market-restock-freq" min="1" value="24">
-                <button id="save-market-settings">Сохранить Настройки Рынка</button>
-            </section>
+                <!-- Управление Видеокартами -->
+                <section class="admin-section" id="gpu-management">
+                    <h3>Управление Видеокартами</h3>
+                    <button id="add-gpu-button">Добавить Новую Видеокарту</button>
+                    <h4>Существующие Видеокарты:</h4>
+                    <ul id="gpu-list">
+                        <li>Загрузка...</li>
+                    </ul>
+                    <!-- Форма добавления/редактирования GPU -->
+                    <form id="gpu-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
+                        <h4 id="gpu-form-title">Добавить Видеокарту</h4>
+                        <input type="hidden" id="gpu-id">
+                        <label for="gpu-name">Название Модели:</label>
+                        <input type="text" id="gpu-name" required>
+                        <label for="gpu-hashrate-ethash">Базовый Хешрейт (Ethash, MH/s):</label>
+                        <input type="number" id="gpu-hashrate-ethash" step="0.1" required>
+                        <label for="gpu-hashrate-sha256">Базовый Хешрейт (SHA-256, GH/s):</label>
+                        <input type="number" id="gpu-hashrate-sha256" step="0.1" required>
+                        <label for="gpu-power">Энергопотребление (W):</label>
+                        <input type="number" id="gpu-power" required>
+                        <label for="gpu-price">Базовая Цена (Новая, $):</label>
+                        <input type="number" id="gpu-price" required>
+                        <label for="gpu-image-url">URL Изображения:</label>
+                        <input type="url" id="gpu-image-url" placeholder="https://example.com/image.jpg" required>
+                        <label for="gpu-stock">Начальный запас (шт.):</label>
+                        <input type="number" id="gpu-stock" value="10">
+                        <label for="gpu-wear-rate">Коэффициент износа (0.01 - 1.0):</label>
+                        <input type="number" id="gpu-wear-rate" step="0.01" min="0.01" max="1.0" value="0.1">
+                        <label for="gpu-requirements">Требования (текст):</label>
+                        <input type="text" id="gpu-requirements" placeholder="PCIe x16, 8-pin Power">
+                        <div class="form-actions">
+                            <button type="submit" id="save-gpu-button">Сохранить</button>
+                            <button type="button" id="cancel-gpu-button">Отмена</button>
+                        </div>
+                    </form>
+                </section>
 
-            <!-- Настройки Игры -->
-            <section class="admin-section" id="game-settings">
-                <h3>Общие Настройки Игры</h3>
-                <label for="game-start-capital">Стартовый капитал ($):</label>
-                <input type="number" id="game-start-capital" value="1000">
-                <label for="game-energy-cost">Стоимость кВт⋅ч ($):</label>
-                <input type="number" id="game-energy-cost" step="0.01" value="0.15">
-                <button id="save-game-settings">Сохранить Общие Настройки</button>
-            </section>
+                <!-- Управление Криптовалютами -->
+                <section class="admin-section" id="crypto-management">
+                    <h3>Управление Криптовалютами</h3>
+                     <button id="add-crypto-button">Добавить Криптовалюту</button>
+                     <h4>Существующие Криптовалюты:</h4>
+                     <ul id="crypto-list">
+                         <!-- Динамический список -->
+                     </ul>
+                     <!-- Форма для криптовалют -->
+                     <form id="crypto-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
+                         <h4 id="crypto-form-title">Добавить Криптовалюту</h4>
+                          <input type="hidden" id="crypto-id"> <!-- Используем Ticker как ID при редактировании -->
+                          <label for="crypto-name">Название:</label>
+                          <input type="text" id="crypto-name" required>
+                          <label for="crypto-ticker">Тикер (напр. BTC):</label>
+                          <input type="text" id="crypto-ticker" required>
+                          <label for="crypto-algorithm">Алгоритм Майнинга:</label>
+                          <select id="crypto-algorithm">
+                              <option value="ethash">Ethash</option>
+                              <option value="sha256">SHA-256</option>
+                              <option value="kawpow">KawPow</option> <!-- Пример -->
+                              <option value="randomx">RandomX</option> <!-- Пример -->
+                          </select>
+                           <label for="crypto-hash-unit">Единица Хешрейта (напр. MH/s, GH/s, kH/s):</label>
+                           <input type="text" id="crypto-hash-unit" placeholder="MH/s" required>
+                          <label for="crypto-base-price">Начальная цена ($):</label>
+                          <input type="number" id="crypto-base-price" step="0.01" required>
+                           <label for="crypto-volatility">Волатильность (0.0 - 1.0):</label>
+                           <input type="number" id="crypto-volatility" step="0.01" min="0" max="1.0" value="0.1">
+                           <div class="form-actions">
+                               <button type="submit" id="save-crypto-button">Сохранить</button>
+                               <button type="button" id="cancel-crypto-button">Отмена</button>
+                           </div>
+                     </form>
+                </section>
 
-        </div> <!-- Конец #admin-panel -->
+                <!-- Настройки Рынка -->
+                <section class="admin-section" id="market-settings">
+                    <h3>Настройки Рынка</h3>
+                    <label for="market-bot-activity">Активность ботов на Б/У (0-10):</label>
+                    <input type="number" id="market-bot-activity" min="0" max="10" value="5">
+                    <label for="market-restock-freq">Частота пополнения новых (в игровых тиках/секундах):</label>
+                    <input type="number" id="market-restock-freq" min="1" value="60">
+                    <button id="save-market-settings">Сохранить Настройки Рынка</button>
+                </section>
+
+                <!-- Настройки Игры -->
+                <section class="admin-section" id="game-settings">
+                    <h3>Общие Настройки Игры</h3>
+                    <label for="game-start-capital">Стартовый капитал ($):</label>
+                    <input type="number" id="game-start-capital" value="1000">
+                    <label for="game-energy-cost">Стоимость кВт⋅ч ($):</label>
+                    <input type="number" id="game-energy-cost" step="0.001" value="0.15"> <!-- Можно более точно -->
+                    <button id="save-game-settings">Сохранить Общие Настройки</button>
+                </section>
+
+            </div> <!-- Конец #admin-panel -->
+        </section> <!-- Конец #admin-panel-section -->
 
     </main>
 
     <footer>
-        <p>Панель управления CryptoRig Tycoon</p>
+        <p>© 2023 CryptoRig Tycoon. Все права защищены (на самом деле нет).</p>
     </footer>
 
-    <script src="admin.js"></script> <!-- Отдельный JS для админки -->
+    <!-- Подключаем JavaScript в конце body -->
+    <script src="script.js"></script> <!-- Теперь только один JS файл -->
 </body>
 </html>
