@@ -2,265 +2,172 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>Crypto Baron Mini v2</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-Панель - CryptoRig Tycoon</title>
+    <link rel="stylesheet" href="style.css"> <!-- Можно использовать тот же CSS или отдельный -->
+    <style>
+        /* Простые стили для админки */
+        #admin-panel { display: none; } /* Скрыта по умолчанию */
+        .admin-section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .admin-section h3 { margin-top: 0; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="number"], input[type="url"], select {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-actions button { margin-right: 10px; }
+        #gpu-list li, #crypto-list li {
+            border-bottom: 1px dashed #eee;
+            padding: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+         }
+         .list-actions button { font-size: 0.8em; padding: 2px 5px; }
+    </style>
 </head>
 <body>
-    <div class="app">
-        <!-- Верхняя панель: Статус -->
-        <header class="status-bar">
-            <div class="status-section status-wallet">
-                <!-- Баланс основных криптовалют -->
-                <div class="wallet-item">🪙 <span id="wallet-btcz">0</span> BTCz</div>
-                <div class="wallet-item">💎 <span id="wallet-ethz">0</span> ETHz</div>
-                <div class="wallet-item">🦴 <span id="wallet-dogez">0</span> DOGEz</div>
-                <!-- Основная валюта для транзакций -->
-                <div class="wallet-item main-currency">💰 <span id="player-balance">0</span> USDz</div>
-            </div>
-            <div class="status-section status-rig">
-                <!-- Статус фермы -->
-                <div class="status-item hashrate">⚡️<span id="total-hashrate">0</span> H/s</div>
-                <div class="status-item power">🔌<span id="total-power">0</span>W (<span id="power-cost">0</span>💰/ч)</div>
-                <div class="status-item mining-target">⛏️ <span id="mining-target-coin">BTCz</span></div>
-                <div class="status-item pool">🔗 <span id="current-pool-name">Нет</span></div>
-            </div>
-            <div class="status-section status-user">
-                 <!-- Информация о пользователе -->
-                 <div class="status-item user-info">👤<span id="user-name">User</span></div>
-            </div>
-        </header>
 
-        <!-- Область для отображения активных событий -->
-        <div id="active-event-banner" class="event-banner" style="display: none;">
-             <span class="icon">🎉</span> <span id="event-text">Событие!</span>
-        </div>
+    <header>
+        <h1>Админ-Панель</h1>
+    </header>
 
-        <!-- Основная область: Контент -->
-        <main class="content">
-            <!-- Экран: Ферма -->
-            <section id="screen-main" class="screen active">
-                <h2>Моя Ферма</h2>
-                <!-- Выбор монеты для майнинга -->
-                <div class="mining-select-container">
-                    <label for="mining-coin-select">Майнить:</label>
-                    <select id="mining-coin-select">
-                        <option value="BTCz">🪙 BTCz</option>
-                        <option value="ETHZ">💎 ETHz</option> <!-- Исправлено на ETHZ -->
-                        <option value="DOGEz">🦴 DOGEz</option>
-                    </select>
-                </div>
+    <main id="admin-container" style="padding: 20px;">
 
-                <!-- Слоты для основных компонентов фермы -->
-                <div class="farm-overview">
-                    <div class="farm-component-slot" id="motherboard-slot">
-                        <span class="slot-label">Мат. плата:</span>
-                        <div class="slot empty">Нет платы</div>
-                        <!-- Сюда будет рендериться карта материнки -->
+        <!-- Форма Входа -->
+        <section id="login-section">
+            <h2>Вход в Админ-Панель</h2>
+            <form id="login-form">
+                <label for="admin-password">Пароль:</label>
+                <input type="password" id="admin-password" required>
+                <button type="submit" id="login-button">Войти</button>
+                <p id="login-error" style="color: red; display: none;">Неверный пароль!</p>
+            </form>
+        </section>
+
+        <!-- Основная Панель Админа (скрыта до входа) -->
+        <div id="admin-panel">
+            <button id="logout-button" style="float: right;">Выйти</button>
+            <h2>Добро пожаловать, Админ!</h2>
+
+            <!-- Управление Видеокартами -->
+            <section class="admin-section" id="gpu-management">
+                <h3>Управление Видеокартами</h3>
+                <button id="add-gpu-button">Добавить Новую Видеокарту</button>
+                <h4>Существующие Видеокарты:</h4>
+                <ul id="gpu-list">
+                    <!-- Сюда JS добавит список GPU -->
+                    <li>Загрузка...</li>
+                </ul>
+
+                <!-- Форма добавления/редактирования GPU (скрыта по умолчанию) -->
+                <form id="gpu-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
+                    <h4 id="gpu-form-title">Добавить Видеокарту</h4>
+                    <input type="hidden" id="gpu-id"> <!-- Для редактирования -->
+
+                    <label for="gpu-name">Название Модели:</label>
+                    <input type="text" id="gpu-name" required>
+
+                    <label for="gpu-hashrate-ethash">Базовый Хешрейт (Ethash, MH/s):</label>
+                    <input type="number" id="gpu-hashrate-ethash" step="0.1" required>
+
+                    <label for="gpu-hashrate-sha256">Базовый Хешрейт (SHA-256, GH/s):</label>
+                    <input type="number" id="gpu-hashrate-sha256" step="1" required>
+
+                    <label for="gpu-power">Энергопотребление (W):</label>
+                    <input type="number" id="gpu-power" required>
+
+                    <label for="gpu-price">Базовая Цена (Новая, $):</label>
+                    <input type="number" id="gpu-price" required>
+
+                    <label for="gpu-image-url">URL Изображения:</label>
+                    <input type="url" id="gpu-image-url" placeholder="https://example.com/image.jpg" required>
+
+                    <label for="gpu-stock">Начальный запас (шт.):</label>
+                    <input type="number" id="gpu-stock" value="10">
+
+                    <label for="gpu-wear-rate">Коэффициент износа (0.1 - 1.0):</label>
+                    <input type="number" id="gpu-wear-rate" step="0.01" min="0.01" max="1.0" value="0.1">
+
+                     <label for="gpu-requirements">Требования (текст):</label>
+                    <input type="text" id="gpu-requirements" placeholder="PCIe x16, 8-pin Power">
+
+                    <div class="form-actions">
+                        <button type="submit" id="save-gpu-button">Сохранить</button>
+                        <button type="button" id="cancel-gpu-button">Отмена</button>
                     </div>
-                    <div class="farm-component-slot" id="psu-slot">
-                         <span class="slot-label">Блок Питания:</span>
-                         <div class="slot empty">Нет БП</div>
-                        <!-- Сюда будет рендериться карта БП -->
-                    </div>
-                </div>
-                <!-- Контейнер для слотов видеокарт -->
-                <div id="rig-gpu-slots" class="rig-slots-container">
-                    <p class="placeholder-text">Установите материнскую плату для отображения слотов GPU</p>
-                    <!-- Слоты для GPU будут генерироваться JS -->
-                </div>
-                <!-- Статус майнинга (доходность) -->
-                <div class="mining-status">
-                    <p>Доходность (примерно): <span id="estimated-income">0</span> <span id="estimated-income-coin">BTCz</span> / час (за вычетом энергии)</p>
-                </div>
+                </form>
             </section>
 
-            <!-- Экран: Магазин Комплектующих -->
-            <section id="screen-shop" class="screen">
-                <h2>Магазин Комплектующих (Цены в USDz)</h2>
-                <div id="shop-items" class="item-grid">
-                    <!-- Товары будут генерироваться JS -->
-                </div>
+            <!-- Управление Криптовалютами -->
+            <section class="admin-section" id="crypto-management">
+                <h3>Управление Криптовалютами</h3>
+                 <button id="add-crypto-button">Добавить Криптовалюту</button>
+                 <h4>Существующие Криптовалюты:</h4>
+                 <ul id="crypto-list">
+                     <!-- Сюда JS добавит список криптовалют -->
+                 </ul>
+                 <!-- Форма для криптовалют (Аналогично GPU) -->
+                 <form id="crypto-form" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;">
+                     <h4 id="crypto-form-title">Добавить Криптовалюту</h4>
+                      <input type="hidden" id="crypto-id">
+                      <label for="crypto-name">Название:</label>
+                      <input type="text" id="crypto-name" required>
+                      <label for="crypto-ticker">Тикер (напр. BTC):</label>
+                      <input type="text" id="crypto-ticker" required>
+                      <label for="crypto-algorithm">Алгоритм Майнинга:</label>
+                      <select id="crypto-algorithm">
+                          <option value="ethash">Ethash</option>
+                          <option value="sha256">SHA-256</option>
+                          <!-- Добавить другие -->
+                      </select>
+                      <label for="crypto-base-price">Начальная цена ($):</label>
+                      <input type="number" id="crypto-base-price" step="0.01" required>
+                       <label for="crypto-volatility">Волатильность (0.0 - 1.0):</label>
+                       <input type="number" id="crypto-volatility" step="0.01" min="0" max="1.0" value="0.1">
+                       <div class="form-actions">
+                           <button type="submit" id="save-crypto-button">Сохранить</button>
+                           <button type="button" id="cancel-crypto-button">Отмена</button>
+                       </div>
+                 </form>
             </section>
 
-             <!-- Экран: Рынок Криптовалют -->
-             <section id="screen-crypto-market" class="screen">
-                 <h2>Рынок Криптовалют</h2>
-                 <!-- Отображение текущих цен -->
-                 <div id="crypto-prices" class="crypto-prices-container">
-                      <!-- Цены на монеты будут генерироваться JS -->
-                 </div>
-                 <!-- График цен (симуляция) -->
-                 <div class="crypto-chart-container">
-                     <h3>График BTCz/USDz (симуляция)</h3>
-                     <canvas id="crypto-chart" height="100"></canvas> <!-- Canvas для Chart.js -->
-                 </div>
-                 <!-- Форма обмена валют -->
-                 <div class="crypto-exchange">
-                     <h3>Обмен Валют (Комиссия: <span id="exchange-fee-percent">1</span>%)</h3>
-                     <div class="exchange-form">
-                         <div class="form-group">
-                             <label for="exchange-from-coin">Из:</label>
-                             <select id="exchange-from-coin"></select> <!-- Заполняется JS -->
-                             <label for="exchange-from-amount">Кол-во:</label>
-                             <input type="number" id="exchange-from-amount" placeholder="0" min="0" step="any">
-                             <span>Доступно: <span id="from-coin-balance">0</span></span>
-                         </div>
-                         <div class="form-group">
-                             <label for="exchange-to-coin">В:</label>
-                             <select id="exchange-to-coin"></select> <!-- Заполняется JS -->
-                             <label>Получите (≈):</label>
-                             <span id="exchange-to-amount">0</span> <!-- Рассчитывается JS -->
-                         </div>
-                         <button id="exchange-button" class="action-button">Обменять</button>
-                     </div>
-                 </div>
-             </section>
-
-            <!-- Экран: Рынок Б/У Комплектующих -->
-            <section id="screen-market-used" class="screen">
-                <h2>Рынок Б/У Комплектующих (Цены в USDz)</h2>
-                 <!-- Табы для переключения между покупкой и продажей -->
-                 <div class="market-tabs">
-                    <button class="tab-button active" data-market-tab="buy">Купить</button>
-                    <button class="tab-button" data-market-tab="sell">Мои лоты / Продать</button>
-                </div>
-                <!-- Контент для вкладки "Купить" -->
-                <div id="market-items-buy" class="item-grid market-tab-content active">
-                     <p class="placeholder-text">Загрузка лотов...</p>
-                    <!-- Лоты других игроков (симуляция) будут генерироваться JS -->
-                </div>
-                <!-- Контент для вкладки "Продать" -->
-                <div id="market-items-sell" class="market-tab-content">
-                    <h3>Мои лоты на продаже:</h3>
-                    <div id="my-market-listings" class="item-grid">
-                        <p class="placeholder-text">У вас нет активных лотов.</p>
-                        <!-- Ваши лоты будут генерироваться JS -->
-                    </div>
-                    <hr>
-                    <h3>Выставить на продажу (из Инвентаря):</h3>
-                    <div id="inventory-for-sale" class="item-grid">
-                         <p class="placeholder-text">В инвентаре нет предметов для продажи.</p>
-                         <!-- Предметы из инвентаря для продажи будут генерироваться JS -->
-                    </div>
-                </div>
+            <!-- Настройки Рынка -->
+            <section class="admin-section" id="market-settings">
+                <h3>Настройки Рынка</h3>
+                <label for="market-bot-activity">Активность ботов на Б/У (0-10):</label>
+                <input type="number" id="market-bot-activity" min="0" max="10" value="5">
+                <label for="market-restock-freq">Частота пополнения новых (в игровых часах):</label>
+                <input type="number" id="market-restock-freq" min="1" value="24">
+                <button id="save-market-settings">Сохранить Настройки Рынка</button>
             </section>
 
-            <!-- Экран: Инвентарь -->
-            <section id="screen-inventory" class="screen">
-                <h2>Мой Инвентарь</h2>
-                <div id="inventory-items" class="item-grid">
-                     <p class="placeholder-text">Инвентарь пуст.</p>
-                    <!-- Комплектующие игрока будут генерироваться JS -->
-                </div>
+            <!-- Настройки Игры -->
+            <section class="admin-section" id="game-settings">
+                <h3>Общие Настройки Игры</h3>
+                <label for="game-start-capital">Стартовый капитал ($):</label>
+                <input type="number" id="game-start-capital" value="1000">
+                <label for="game-energy-cost">Стоимость кВт⋅ч ($):</label>
+                <input type="number" id="game-energy-cost" step="0.01" value="0.15">
+                <button id="save-game-settings">Сохранить Общие Настройки</button>
             </section>
 
-             <!-- Экран: Пулы и Улучшения -->
-            <section id="screen-pools-upgrades" class="screen">
-                 <h2>Майнинг-Пулы</h2>
-                 <div id="pool-list" class="pool-list">
-                     <p class="placeholder-text">Загрузка списка пулов...</p>
-                     <!-- Список пулов будет генерироваться JS -->
-                 </div>
-                 <hr>
-                <h2>Улучшения</h2>
-                <div id="upgrade-list" class="upgrade-list">
-                     <p class="placeholder-text">Раздел улучшений в разработке.</p>
-                    <!-- Доступные улучшения будут генерироваться JS -->
-                </div>
-            </section>
+        </div> <!-- Конец #admin-panel -->
 
-        </main>
+    </main>
 
-        <!-- Нижняя панель: Навигация -->
-        <nav class="navigation">
-            <button class="nav-button active" data-screen="main">🏠 Ферма</button>
-            <button class="nav-button" data-screen="shop">🛒 Магазин</button>
-            <button class="nav-button" data-screen="crypto-market">💹 Крипто</button>
-            <button class="nav-button" data-screen="market-used">📈 Рынок Б/У</button>
-            <button class="nav-button" data-screen="inventory">🎒 Инвентарь</button>
-            <button class="nav-button" data-screen="pools-upgrades">🚀 Улучшения</button>
-        </nav>
-    </div> <!-- Конец .app -->
+    <footer>
+        <p>Панель управления CryptoRig Tycoon</p>
+    </footer>
 
-     <!-- Шаблоны для динамической генерации контента -->
-
-     <!-- Шаблон для карточки компонента -->
-     <template id="component-card-template">
-         <div class="item-card">
-             <img src="" alt="" class="item-image"> <!-- src будет установлен JS -->
-             <h3 class="item-name">Название</h3>
-             <div class="item-stats">
-                 <!-- Статы будут добавлены JS -->
-             </div>
-             <div class="item-wear" style="display: none;"> <!-- Скрыто по умолчанию, показывается JS для Б/У -->
-                 Износ: <span class="wear-value">0</span>%
-             </div>
-             <div class="item-price" style="display: none;"> <!-- Скрыто по умолчанию, показывается JS для магазина/рынка -->
-                 💰 <span class="price-value">0</span> USDz
-             </div>
-             <div class="item-actions">
-                 <!-- Кнопки действий будут добавлены JS -->
-             </div>
-         </div>
-     </template>
-
-     <!-- Шаблон для цен криптовалют -->
-      <template id="crypto-price-template">
-          <div class="crypto-price-item">
-              <span class="crypto-icon">?</span>
-              <span class="crypto-name">COIN</span>:
-              <span class="crypto-value">0</span> USDz
-              (<span class="crypto-change">0%</span>) <!-- Класс positive/negative будет добавлен JS -->
-          </div>
-      </template>
-
-      <!-- Шаблон для майнинг-пула -->
-       <template id="pool-template">
-           <div class="pool-card">
-               <h4><span class="pool-icon">🔗</span> <span class="pool-name">Pool Name</span></h4>
-               <p class="pool-description">Description</p>
-               <p>Бонус: <span class="pool-bonus">0</span>% | Комиссия: <span class="pool-fee">0</span>%</p>
-               <p>Требования: <span class="pool-req">None</span></p>
-               <button class="pool-action-button action-button"></button> <!-- Текст и действие кнопки установит JS -->
-           </div>
-       </template>
-
-     <!-- Модальные окна -->
-
-     <!-- Модальное окно для установки цены продажи Б/У -->
-     <div id="sell-modal" class="modal">
-         <div class="modal-content">
-             <span class="close-button" title="Закрыть">×</span>
-             <h4>Установить цену продажи (в USDz)</h4>
-             <p>Предмет: <span id="sell-item-name"></span></p>
-             <label for="sell-price-input">Цена:</label>
-             <input type="number" id="sell-price-input" min="1" placeholder="Введите цену">
-             <button id="confirm-sell-button" class="action-button">Выставить на продажу</button>
-         </div>
-     </div>
-
-     <!-- Модальное окно подтверждения ремонта -->
-      <div id="repair-modal" class="modal">
-         <div class="modal-content">
-             <span class="close-button" title="Закрыть">×</span>
-             <h4>Подтверждение Ремонта</h4>
-             <p>Отремонтировать <span id="repair-item-name"></span>?</p>
-             <p>Текущий износ: <span id="repair-item-wear"></span>%</p>
-             <p>Стоимость ремонта: <span id="repair-cost">0</span> USDz</p>
-             <button id="confirm-repair-button" class="action-button">Отремонтировать</button>
-         </div>
-     </div>
-
-    <!-- Подключение внешних библиотек -->
-    <!-- Chart.js для графика криптовалют -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-
-    <!-- Основной скрипт игры -->
-    <script src="script.js"></script>
+    <script src="admin.js"></script> <!-- Отдельный JS для админки -->
 </body>
 </html>
