@@ -1,13 +1,24 @@
-/* Кастомные стили */
+/* Шрифт и базовые стили */
 body {
+    font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    min-height: 100vh;
 }
 
-/* Тёмная тема */
-.dark {
-    background: linear-gradient(to bottom, #1f2937, #111827);
+/* Светлый режим */
+.light {
+    background: #f7fafc;
+    color: #1a202c;
 }
+
+.light .bg-gray-900 { background: #f7fafc; }
+.light .bg-gray-800 { background: #edf2f7; }
+.light .bg-gray-700 { background: #e2e8f0; }
+.light .border-gray-700 { border-color: #cbd5e0; }
+.light .border-gray-600 { border-color: #a0aec0; }
+.light .text-white { color: #1a202c; }
+.light .text-gray-400 { color: #4a5568; }
+.light .bg-purple-600 { background: #6b46c1; }
+.light #response { background: #ffffff !important; }
 
 /* Анимации */
 .animate-fade-in {
@@ -30,15 +41,15 @@ body {
 
 /* Skeleton loading */
 .skeleton:empty {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, #2d3748 25%, #4a5563 50%, #2d3748 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     min-height: 100px;
-    border-radius: 8px;
+    border-radius: 16px;
 }
 
-.dark .skeleton:empty {
-    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+.light .skeleton:empty {
+    background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e0 50%, #e2e8f0 75%);
 }
 
 @keyframes skeleton-loading {
@@ -47,7 +58,7 @@ body {
 }
 
 /* Hover эффекты */
-button:hover {
+button:hover, select:hover {
     transition: all 0.3s ease;
 }
 
@@ -57,19 +68,24 @@ button.transform:hover {
 
 /* DeepSearch toggle */
 #deepsearch-toggle:checked ~ div {
-    background: #4f46e5;
+    background: #6b46c1;
 }
 
 #deepsearch-toggle:checked ~ div > div {
-    transform: translateX(24px);
+    transform: translateX(20px);
 }
 
 /* История и кастомные модели */
-.history-item, #custom-models-section .model-item {
+.history-item, .model-item {
     transition: all 0.3s ease;
 }
 
-.history-item:hover, #custom-models-section .model-item:hover {
+.history-item:hover, .model-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Glassmorphism */
+.bg-opacity-80.backdrop-blur-md {
+    backdrop-filter: blur(10px);
 }
