@@ -1,223 +1,109 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="light">
 <head>
     <meta charset="UTF-8">
-    <!-- Важно для корректного отображения в Mini App -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>CryptoFarm Tycoon</title>
-    <!-- Подключаем основной CSS файл (создадим его позже) -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Можно добавить отдельные CSS для компонентов, если нужно -->
-    <!-- <link rel="stylesheet" href="css/farm.css"> -->
-    <!-- <link rel="stylesheet" href="css/market.css"> -->
-    <style>
-        /* Базовые стили для переключения экранов (поместим в style.css позже) */
-        .screen { display: none; }
-        .screen.active { display: block; }
-        .admin-panel { /* Стили для скрытия/отображения админки */ }
-        #admin-content { display: none; } /* Скрыть контент админки до логина */
-        .admin-panel.logged-in #admin-content { display: block; } /* Показать контент после логина */
-        .admin-panel.logged-in #admin-login-form { display: none; } /* Скрыть форму логина */
-
-        /* Простые стили для демо (потом перенести в CSS) */
-        body { font-family: sans-serif; margin: 0; background-color: #f0f0f0; }
-        .app { display: flex; flex-direction: column; height: 100vh; /* Занять весь экран */ }
-        .header { background-color: #333; color: white; padding: 10px; text-align: center; }
-        .balances, .farm-stats { font-size: 0.9em; margin-bottom: 5px; }
-        .crypto-balances span { margin-right: 10px; }
-        .content { flex-grow: 1; /* Основной контент занимает доступное место */ padding: 15px; overflow-y: auto; /* Прокрутка, если контент не влезает */ }
-        .navigation { display: flex; justify-content: space-around; background-color: #444; padding: 10px 0; }
-        .navigation button { background: none; border: none; color: white; padding: 8px 5px; cursor: pointer; font-size: 0.8em; }
-        .navigation button.active { font-weight: bold; border-bottom: 2px solid white;} /* Подсветка активной кнопки */
-         h2, h3 { margin-top: 0; }
-         input, button { padding: 8px; margin: 5px 0; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requesty.ai & Grok 3 Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="app">
-        <!-- Верхняя Панель: Балансы и Статистика -->
-        <header class="header">
-            <div class="balances">
-                <!-- Баланс фиатной валюты -->
-                $ <span id="usd-balance">1000.00</span> |
-                <!-- Балансы симулированных криптовалют (будут добавляться динамически) -->
-                <span class="crypto-balances" id="crypto-balances">
-                    <!-- Пример: <span class="crypto-balance">sBTC: <span id="sbtc-balance">0.0000</span></span> -->
-                </span>
-            </div>
-            <div class="farm-stats">
-                Hash: <span id="total-hashrate">0 H/s</span> |
-                Power: <span id="total-power">0 W</span> |
-                Profit/hr: $<span id="profit-rate">0.00</span>
-            </div>
-        </header>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans transition-colors duration-300">
+    <!-- Переключатель темы -->
+    <button id="theme-toggle" class="fixed top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+    </button>
 
-        <!-- Основной Контент (Переключаемые Экраны) -->
-        <main class="content">
+    <!-- Шапка -->
+    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-8 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl font-extrabold animate-fade-in">Requesty.ai & Grok 3 Demo</h1>
+            <p class="mt-3 text-xl animate-slide-up">Исследуйте мощь Grok 3 и DeepSearch с умной маршрутизацией</p>
+        </div>
+    </header>
 
-            <!-- 1. Экран Фермы -->
-            <div id="farm-screen" class="screen active">
-                <h2>Моя Ферма</h2>
-                <div class="farm-rigs">
-                    <!-- Здесь будет визуализация стоек и карт -->
-                    <p>(Визуализация фермы: стойки, слоты, установленные карты)</p>
-                    <p>Выбрано для майнинга: <span id="mining-target">sBTC</span></p>
-                    <button id="change-mining-coin-btn">Сменить монету</button>
+    <!-- Основной контент -->
+    <main class="container mx-auto py-12 space-y-12">
+        <!-- Форма для кастомных моделей -->
+        <section class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 animate-slide-up">
+            <h2 class="text-3xl font-bold mb-6">Добавить кастомную модель</h2>
+            <form id="custom-model-form" class="space-y-6">
+                <div>
+                    <label for="model-id" class="block text-lg font-medium mb-2">ID модели:</label>
+                    <input id="model-id" class="w-full p-4 border rounded-xl bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500" type="text" placeholder="например, custom/my-model" required>
                 </div>
-                <!-- Дополнительные элементы управления фермой -->
-            </div>
+                <div>
+                    <label for="model-name" class="block text-lg font-medium mb-2">Название модели:</label>
+                    <input id="model-name" class="w-full p-4 border rounded-xl bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500" type="text" placeholder="например, Моя модель" required>
+                </div>
+                <div>
+                    <label for="model-provider" class="block text-lg font-medium mb-2">Провайдер:</label>
+                    <input id="model-provider" class="w-full p-4 border rounded-xl bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500" type="text" placeholder="например, Custom" required>
+                </div>
+                <button type="submit" class="bg-green-600 text-white py-3 px-6 rounded-xl hover:bg-green-700 transition transform hover:scale-105">Добавить модель</button>
+            </form>
+        </section>
 
-            <!-- 2. Экран Инвентаря -->
-            <div id="inventory-screen" class="screen">
-                <h2>Инвентарь</h2>
-                <div class="inventory-filters">
-                    <!-- Фильтры по типу (GPU, MB, PSU) -->
-                </div>
-                <div id="inventory-list">
-                    <!-- Сюда JS будет добавлять карточки предметов -->
-                    <p>(Список комплектующих: GPU, MB, PSU...)</p>
-                    <!-- Пример элемента:
-                    <div class="inventory-item" data-item-id="gpu1">
-                        <img src="images/gpu/rtx3080.png" alt="RTX 3080">
-                        <span>Nvidia RTX 3080 (Б/У - 85%)</span>
-                        <span>Hash: 100 MH/s | Power: 250W</span>
-                        <button class="install-btn">Установить</button>
-                        <button class="sell-used-btn">Продать на Б/У</button>
-                    </div>
-                    -->
-                </div>
-            </div>
+        <!-- Список кастомных моделей -->
+        <section id="custom-models-section" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 animate-slide-up"></section>
 
-            <!-- 3. Экран Магазина (Новое) -->
-            <div id="shop-screen" class="screen">
-                <h2>Магазин (Новое)</h2>
-                <div class="shop-categories">
-                    <!-- Категории: Видеокарты, Материнки, БП... -->
+        <!-- Форма для отправки запросов -->
+        <section class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 animate-slide-up">
+            <h2 class="text-3xl font-bold mb-6">Отправить запрос к Grok 3</h2>
+            <form id="request-form" class="space-y-6">
+                <div>
+                    <label for="prompt" class="block text-lg font-medium mb-2">Ваш запрос:</label>
+                    <textarea id="prompt" class="w-full p-4 border rounded-xl bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500" rows="5" placeholder="Введите ваш запрос, например: 'Расскажи о космосе'" required></textarea>
                 </div>
-                <div id="shop-item-list">
-                    <!-- Сюда JS будет добавлять товары -->
-                     <p>(Список новых комплектующих для покупки)</p>
-                    <!-- Пример товара:
-                    <div class="shop-item">
-                        <img src="images/gpu/rtx4090.png" alt="RTX 4090">
-                        <span>Nvidia RTX 4090</span>
-                        <span>Hash: 200 MH/s | Power: 450W</span>
-                        <span>Цена: $1600</span>
-                        <button class="buy-new-btn" data-item-id="gpu_rtx4090">Купить</button>
-                    </div>
-                     -->
+                <div>
+                    <label for="model" class="block text-lg font-medium mb-2">Выберите модель:</label>
+                    <select id="model" class="w-full p-4 border rounded-xl bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500"></select>
                 </div>
-            </div>
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center cursor-pointer">
+                        <input id="deepsearch-toggle" type="checkbox" class="sr-only">
+                        <div class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1 duration-300">
+                            <div class="w-4 h-4 bg-white rounded-full transform transition-transform duration-300"></div>
+                        </div>
+                        <span class="ml-3 text-lg font-medium">Включить DeepSearch</span>
+                    </label>
+                </div>
+                <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 transition transform hover:scale-105">Отправить</button>
+            </form>
+        </section>
 
-            <!-- 4. Экран Рынка Б/У (P2P) -->
-            <div id="used-market-screen" class="screen">
-                <h2>Рынок Б/У Комплектующих</h2>
-                <div class="market-tabs">
-                    <button class="tab-btn active" data-tab="buy-used">Купить</button>
-                    <button class="tab-btn" data-tab="my-listings">Мои лоты</button>
-                </div>
-                <div id="buy-used-tab" class="market-tab active">
-                    <p>(Список лотов от других игроков)</p>
-                    <!-- Фильтры, поиск -->
-                    <!-- Список лотов -->
-                </div>
-                <div id="my-listings-tab" class="market-tab">
-                    <p>(Список ваших комплектующих, выставленных на продажу)</p>
-                     <!-- Кнопка "Выставить новый лот" (переход в инвентарь?) -->
-                </div>
-            </div>
+        <!-- Ответ от API -->
+        <section id="response-section" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 hidden animate-fade-in">
+            <h2 class="text-3xl font-bold mb-6">Ответ от Grok 3</h2>
+            <div id="response" class="text-gray-800 dark:text-gray-200 skeleton"></div>
+        </section>
 
-            <!-- 5. Экран Рынка Криптовалют -->
-            <div id="crypto-market-screen" class="screen">
-                <h2>Рынок Криптовалют (Симуляция)</h2>
-                <div id="crypto-list">
-                     <p>(Список симулированных криптовалют, их курсы к $ и кнопки "Продать")</p>
-                    <!-- Пример:
-                    <div class="crypto-market-item">
-                        <span>sBTC/USD</span>
-                        <span class="rate" id="sbtc-rate">$25000.50</span>
-                        <span class="change positive">+1.5%</span>
-                        <input type="number" min="0" step="0.0001" placeholder="Кол-во sBTC">
-                        <button class="sell-crypto-btn" data-coin="sBTC">Продать</button>
-                    </div>
-                    <div class="crypto-market-item">
-                        <span>sETC/USD</span>
-                        <span class="rate" id="setc-rate">$15.80</span>
-                        <span class="change negative">-0.8%</span>
-                         <input type="number" min="0" step="0.1" placeholder="Кол-во sETC">
-                        <button class="sell-crypto-btn" data-coin="sETC">Продать</button>
-                    </div>
-                    -->
-                </div>
-                <div class="market-chart">
-                    <!-- Место для простого графика -->
-                    <p>(График курса выбранной криптовалюты)</p>
-                </div>
-            </div>
+        <!-- История запросов -->
+        <section id="history-section" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 animate-slide-up"></section>
 
-            <!-- 6. Экран Настроек -->
-            <div id="settings-screen" class="screen">
-                <h2>Настройки</h2>
-                <button id="admin-panel-button">Войти в Админ Панель</button> <!-- Кнопка для доступа к админке -->
-                <!-- Другие настройки: звук, уведомления и т.д. -->
-                <p>(Звук, язык, уведомления...)</p>
-                 <!-- Кнопка выхода из админки, если она активна -->
-                <button id="admin-logout-button" style="display: none;">Выйти из Админ Панели</button>
-            </div>
+        <!-- О сайте -->
+        <section class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl backdrop-blur-md bg-opacity-80 dark:bg-opacity-80 animate-slide-up">
+            <h2 class="text-3xl font-bold mb-6">О Requesty.ai и Grok 3</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-4">
+                Этот сайт демонстрирует интеграцию <strong>Requesty.ai</strong> с <strong>Grok 3</strong> от xAI — мощной моделью ИИ, обеспечивающей продвинутое мышление и глубокое исследование через DeepSearch.
+            </p>
+            <ul class="list-disc pl-6 text-lg text-gray-700 dark:text-gray-300">
+                <li>Умная маршрутизация запросов к оптимальной модели через Requesty.ai.</li>
+                <li>DeepSearch от Grok 3 для синтеза данных из интернета и X.</li>
+                <li>Поддержка кастомных моделей и истории запросов.</li>
+                <li>Современный UI с анимациями и тёмной темой.</li>
+            </ul>
+        </section>
+    </main>
 
-            <!-- 7. Админ-Панель (Изначально не активный экран) -->
-            <div id="admin-panel" class="screen admin-panel">
-                <h2>Admin Panel</h2>
-                <!-- Форма входа -->
-                <div id="admin-login-form">
-                    <input type="password" id="admin-password" placeholder="Password">
-                    <button id="admin-login">Войти</button>
-                </div>
-                <!-- Основной контент админки (скрыт до входа) -->
-                <div id="admin-content">
-                    <h3>Добавить/Редактировать Видеокарту</h3>
-                    <form id="add-gpu-form">
-                        <input type="text" id="gpu-id" placeholder="ID (оставьте пустым для новой)">
-                        <input type="text" id="gpu-name" placeholder="Название (e.g., Nvidia RTX 3070)" required>
-                        <input type="number" id="gpu-hashrate" placeholder="Хешрейт (MH/s)" required step="any">
-                         <!-- Можно добавить поля для разных алгоритмов если нужно -->
-                        <input type="number" id="gpu-power" placeholder="Энергопотребление (W)" required>
-                        <input type="number" id="gpu-price" placeholder="Цена в магазине ($)" required>
-                        <input type="text" id="gpu-image" placeholder="URL изображения (e.g., images/gpu/rtx3070.png)">
-                        <button type="submit">Сохранить Видеокарту</button>
-                    </form>
-                     <hr>
-                     <!-- Сюда можно добавить формы для управления другими вещами -->
-                     <h3>Управление Криптовалютами</h3>
-                     <!-- Форма добавления/редактирования симулируемых монет -->
-                     <h3>Управление Пользователями</h3>
-                     <!-- (если нужно) -->
-                </div>
-            </div>
+    <!-- Футер -->
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-8">
+        <div class="container mx-auto text-center">
+            <p class="text-lg">© 2025 Requesty.ai & Grok 3 Demo. Хостинг на GitHub Pages.</p>
+        </div>
+    </footer>
 
-        </main>
-
-        <!-- Нижняя Навигация -->
-        <nav class="navigation">
-            <button data-screen="farm-screen" class="active">Ферма</button>
-            <button data-screen="inventory-screen">Инвентарь</button>
-            <button data-screen="shop-screen">Магазин</button>
-            <button data-screen="used-market-screen">Б/У Рынок</button>
-            <button data-screen="crypto-market-screen">Крипто</button>
-            <button data-screen="settings-screen">Настройки</button>
-        </nav>
-    </div>
-
-    <!-- Подключаем скрипт Telegram Web App -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Подключаем свои JS файлы (создадим их позже) -->
-    <script src="js/api.js"></script> <!-- Для общения с бэкендом -->
-    <script src="js/ui.js"></script> <!-- Вспомогательные функции для UI -->
-    <script src="js/main.js"></script> <!-- Основная логика, навигация, инициализация -->
-    <!-- Можно добавить отдельные скрипты для сложной логики экранов -->
-    <!-- <script src="js/farm.js"></script> -->
-    <!-- <script src="js/market.js"></script> -->
-    <!-- <script src="js/admin.js"></script> -->
-
+    <script src="script.js"></script>
 </body>
 </html>
