@@ -1,13 +1,23 @@
 // Переключатель темы
 document.getElementById('theme-toggle').addEventListener('click', () => {
     document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle('light');
     localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 });
 
 // Инициализация темы
-if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+} else {
     document.documentElement.classList.add('dark');
 }
+
+// Показ/скрытие формы кастомных моделей
+document.getElementById('toggle-custom-model-form').addEventListener('click', () => {
+    const form = document.getElementById('custom-model-form');
+    form.classList.toggle('hidden');
+});
 
 // Загрузка моделей
 async function loadModels() {
@@ -54,11 +64,12 @@ document.getElementById('custom-model-form').addEventListener('submit', (e) => {
 
     loadModels();
     displayCustomModels();
+    e.target.classList.add('hidden');
     e.target.reset();
-    alert('Модель успешно добавлена!');
+    alert('Модель добавлена!');
 });
 
-// Отправка запроса к API
+// Отправка запроса
 document.getElementById('request-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -69,7 +80,7 @@ document.getElementById('request-form').addEventListener('submit', async (e) => 
     const responseDiv = document.getElementById('response');
 
     const apiKey = 'sk-oWHssHofTC2g291Qu6wY/EkYrwQEBjxay1XR1lMg3YD7dP2ci4pQBm3SP3VVv+r7o8ksDq2HdQELruTSmkTtzjiEUX+ysYtiLVbPULHp2gw=';
-    const apiUrl = 'https://app.requesty.ai/api/v1/request'; // Предполагаемый эндпоинт
+    const apiUrl = 'https://app.requesty.ai/api/v1/request';
 
     try {
         responseDiv.innerHTML = '';
@@ -85,7 +96,7 @@ document.getElementById('request-form').addEventListener('submit', async (e) => 
             body: JSON.stringify({
                 prompt: prompt,
                 model: model === 'auto' ? null : model,
-                deepSearch: deepSearch, // DeepSearch для Grok 3
+                deepSearch: deepSearch,
             }),
         });
 
@@ -95,7 +106,7 @@ document.getElementById('request-form').addEventListener('submit', async (e) => 
 
         responseDiv.classList.remove('skeleton');
         responseDiv.innerHTML = `
-            <div class="prose dark:prose-invert">
+            <div class="prose dark:prose-invert max-w-none">
                 <h3>${deepSearch ? 'DeepSearch' : 'Ответ'} от Grok 3</h3>
                 <p>${data.response || 'Ответ не получен'}</p>
                 ${data.sources ? '<h4>Источники:</h4><ul>' + data.sources.map(s => `<li>${s}</li>`).join('') + '</ul>' : ''}
@@ -106,7 +117,7 @@ document.getElementById('request-form').addEventListener('submit', async (e) => 
         displayHistory();
     } catch (error) {
         responseDiv.classList.remove('skeleton');
-        responseDiv.innerHTML = `<p class="text-red-600 dark:text-red-400">Ошибка: ${error.message}</p>`;
+        responseDiv.innerHTML = `<p class="text-red-500">Ошибка: ${error.message}</p>`;
     }
 });
 
@@ -121,16 +132,16 @@ function saveRequest(prompt, response, model, deepSearch) {
 function displayHistory() {
     const history = JSON.parse(localStorage.getItem('requestHistory') || '[]');
     const historySection = document.getElementById('history-section');
-    historySection.innerHTML = '<h2 class="text-3xl font-bold mb-6">История запросов</h2>';
+    historySection.innerHTML = '<h2 class="text-2xl font-bold mb-4">История</h2>';
 
     if (history.length === 0) {
-        historySection.innerHTML += '<p class="text-gray-600 dark:text-gray-400">Запросов пока нет.</p>';
+        historySection.innerHTML += '<p class="text-gray-400">Нет запросов.</p>';
         return;
     }
 
     history.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'history-item border p-6 mb-4 rounded-xl bg-gray-50 dark:bg-gray-700';
+        div.className = 'history-item p-6 mb-4 bg-gray-800 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl';
         div.innerHTML = `
             <p><strong>Запрос:</strong> ${item.prompt}</p>
             <p><strong>Модель:</strong> ${item.model}</p>
@@ -146,21 +157,21 @@ function displayHistory() {
 function displayCustomModels() {
     const customModels = JSON.parse(localStorage.getItem('customModels') || '[]');
     const customModelSection = document.createElement('div');
-    customModelSection.innerHTML = '<h2 class="text-3xl font-bold mb-6">Кастомные модели</h2>';
+    customModelSection.innerHTML = '<h2 class="text-2xl font-bold mb-4">Мои модели</h2>';
 
     if (customModels.length === 0) {
-        customModelSection.innerHTML += '<p class="text-gray-600 dark:text-gray-400">Кастомных моделей пока нет.</p>';
+        customModelSection.innerHTML += '<p class="text-gray-400">Нет моделей.</p>';
     } else {
         customModels.forEach((model, index) => {
             const div = document.createElement('div');
-            div.className = 'model-item border p-6 mb-4 rounded-xl bg-gray-50 dark:bg-gray-700 flex justify-between items-center';
+            div.className = 'model-item p-6 mb-4 bg-gray-800 bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl flex justify-between';
             div.innerHTML = `
                 <div>
                     <p><strong>ID:</strong> ${model.id}</p>
                     <p><strong>Название:</strong> ${model.name}</p>
                     <p><strong>Провайдер:</strong> ${model.provider}</p>
                 </div>
-                <button class="bg-red-600 text-white py-2 px-4 rounded-xl hover:bg-red-700 transition transform hover:scale-105" data-index="${index}">Удалить</button>
+                <button class="bg-red-600 text-white p-2 rounded-xl hover:bg-red-700 transition transform hover:scale-105" data-index="${index}">Удалить</button>
             `;
             customModelSection.appendChild(div);
         });
@@ -169,7 +180,7 @@ function displayCustomModels() {
     const existingSection = document.getElementById('custom-models-section');
     if (existingSection) existingSection.remove();
     customModelSection.id = 'custom-models-section';
-    document.querySelector('main').insertBefore(customModelSection, document.getElementById('custom-model-form').parentElement);
+    document.querySelector('main').insertBefore(customModelSection, document.getElementById('toggle-custom-model-form').parentElement);
 
     customModelSection.querySelectorAll('button').forEach(button => {
         button.addEventListener('click', () => {
