@@ -1,92 +1,21 @@
-/* --- Базовые Стили и Сброс --- */
-:root {
-    /* Цветовая палитра (Темная тема) */
-    --bg-color-dark: #1c1c1e;       /* Основной фон */
-    --bg-color-medium: #2c2c2e;    /* Фон контейнеров */
-    --bg-color-light: #3a3a3c;     /* Фон элементов ввода, кнопок */
-    --text-color-primary: #f2f2f7;   /* Основной текст */
-    --text-color-secondary: #a0a0a5; /* Вторичный текст, подсказки */
-    --accent-color-primary: #0a84ff; /* Акцентный (синий) */
-    --accent-color-secondary: #5e5ce6; /* Акцентный (фиолетовый) */
-    --color-success: #30d158;       /* Зеленый для успеха/прибыли */
-    --color-danger: #ff453a;        /* Красный для ошибок/убытка */
-    --border-color: #48484a;        /* Цвет рамок */
-
-    /* Размеры */
-    --padding-base: 15px;
-    --padding-small: 10px;
-    --border-radius-base: 8px;
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+/* Кастомные стили */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    background-color: var(--bg-color-dark);
-    color: var(--text-color-primary);
-    font-size: 16px;
-    line-height: 1.5;
-    /* Стили для интеграции с темой Telegram (опционально) */
-    /* background-color: var(--tg-theme-bg-color, var(--bg-color-dark)); */
-    /* color: var(--tg-theme-text-color, var(--text-color-primary)); */
+    line-height: 1.6;
+    min-height: 100vh;
 }
 
-/* --- Основная Структура Приложения --- */
-.app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Используем min-height вместо height для гибкости */
-    max-width: 100%; /* Убедимся, что не выходит за пределы */
-    overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
+/* Тёмная тема */
+.dark {
+    background: linear-gradient(to bottom, #1f2937, #111827);
 }
 
-/* --- Шапка (Header) --- */
-.header {
-    background-color: var(--bg-color-medium);
-    padding: var(--padding-small) var(--padding-base);
-    border-bottom: 1px solid var(--border-color);
-    text-align: center;
+/* Анимации */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-in;
 }
 
-.header .balances, .header .farm-stats {
-    font-size: 0.9em;
-    color: var(--text-color-secondary);
-    margin-bottom: 5px;
-}
-
-.header .balances span, .header .farm-stats span {
-    color: var(--text-color-primary); /* Белый для цифр */
-    font-weight: 500;
-}
-
-.header .crypto-balances span {
-    margin-right: 10px;
-}
-.header .crypto-balances span:last-child {
-    margin-right: 0;
-}
-
-/* --- Основной Контент --- */
-.content {
-    flex-grow: 1;
-    padding: var(--padding-base);
-    overflow-y: auto; /* Вертикальная прокрутка, если контент не влезает */
-    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
-}
-
-/* --- Стили Экранов --- */
-.screen {
-    display: none; /* Скрыты по умолчанию */
-    animation: fadeIn 0.3s ease-in-out; /* Плавное появление */
-}
-
-.screen.active {
-    display: block; /* Показываем активный экран */
+.animate-slide-up {
+    animation: slideUp 0.6s ease-out;
 }
 
 @keyframes fadeIn {
@@ -94,354 +23,53 @@ body {
     to { opacity: 1; }
 }
 
-h2 {
-    font-size: 1.4em;
-    margin-bottom: var(--padding-base);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: var(--padding-small);
-    color: var(--text-color-primary);
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-h3 {
-    font-size: 1.1em;
-    margin-top: var(--padding-base);
-    margin-bottom: var(--padding-small);
-    color: var(--text-color-secondary);
+/* Skeleton loading */
+.skeleton:empty {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    min-height: 100px;
+    border-radius: 8px;
 }
 
-/* --- Нижняя Навигация --- */
-.navigation {
-    display: flex;
-    justify-content: space-around;
-    background-color: var(--bg-color-medium);
-    padding: 5px 0; /* Уменьшим паддинг */
-    border-top: 1px solid var(--border-color);
-    position: sticky; /* Прилипает книзу */
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100; /* Поверх контента */
+.dark .skeleton:empty {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
 }
 
-.navigation button {
-    background: none;
-    border: none;
-    color: var(--text-color-secondary); /* Неактивные кнопки - серые */
-    padding: var(--padding-small) 5px;
-    cursor: pointer;
-    font-size: 0.75em; /* Меньше шрифт для компактности */
-    text-align: center;
-    flex-grow: 1; /* Растягиваем кнопки */
-    transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    border-bottom: 3px solid transparent; /* Место для активной полоски */
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
-.navigation button:hover {
-    color: var(--text-color-primary);
+/* Hover эффекты */
+button:hover {
+    transition: all 0.3s ease;
 }
 
-.navigation button.active {
-    color: var(--accent-color-primary); /* Активная кнопка - синяя */
-    font-weight: 600;
-    border-bottom-color: var(--accent-color-primary); /* Синяя полоска снизу */
+button.transform:hover {
+    transform: scale(1.05);
 }
 
-
-/* --- Общие Стили Элементов --- */
-
-p {
-    margin-bottom: var(--padding-small);
-    color: var(--text-color-secondary);
+/* DeepSearch toggle */
+#deepsearch-toggle:checked ~ div {
+    background: #4f46e5;
 }
 
-a {
-    color: var(--accent-color-primary);
-    text-decoration: none;
+#deepsearch-toggle:checked ~ div > div {
+    transform: translateX(24px);
 }
 
-a:hover {
-    text-decoration: underline;
+/* История и кастомные модели */
+.history-item, #custom-models-section .model-item {
+    transition: all 0.3s ease;
 }
 
-button, input[type="submit"], .btn { /* Общий стиль для кнопок */
-    display: inline-block;
-    padding: 10px 15px;
-    margin: 5px 0;
-    background-color: var(--accent-color-primary);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-base);
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
-    text-align: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-button:hover, input[type="submit"]:hover, .btn:hover {
-    background-color: darken(var(--accent-color-primary), 10%); /* Немного темнее при наведении */
-}
-
-button:active, input[type="submit"]:active, .btn:active {
-    transform: scale(0.98); /* Эффект нажатия */
-}
-
-/* Вариации кнопок */
-.btn-secondary {
-    background-color: var(--bg-color-light);
-    color: var(--text-color-primary);
-}
-.btn-secondary:hover { background-color: lighten(var(--bg-color-light), 5%); }
-
-.btn-danger {
-    background-color: var(--color-danger);
-    color: white;
-}
-.btn-danger:hover { background-color: darken(var(--color-danger), 10%); }
-
-/* Стили для полей ввода */
-input[type="text"],
-input[type="password"],
-input[type="number"],
-input[type="url"],
-select,
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 10px 0;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-color-light);
-    color: var(--text-color-primary);
-    border-radius: var(--border-radius-base);
-    font-size: 1em;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent-color-primary);
-    box-shadow: 0 0 0 2px rgba(var(--accent-color-primary), 0.3);
-}
-
-hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: var(--padding-base) 0;
-}
-
-/* --- Стили для Списков (Инвентарь, Магазин, Рынки) --- */
-.item-list { /* Общий класс для контейнеров списков */
-    display: grid;
-    gap: var(--padding-small);
-    /* Адаптивная сетка: */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Создает колонки минимум 250px */
-}
-
-.inventory-item, .shop-item, .market-listing { /* Карточка элемента */
-    background-color: var(--bg-color-medium);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-base);
-    padding: var(--padding-small);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Выравнивание контента по левому краю */
-}
-
-.inventory-item img, .shop-item img {
-    max-width: 80px; /* Размер картинки */
-    height: auto;
-    margin-bottom: var(--padding-small);
-    align-self: center; /* Картинку по центру */
-}
-
-.item-details span { /* Текст внутри карточки */
-    display: block; /* Каждый span с новой строки */
-    font-size: 0.9em;
-    margin-bottom: 4px;
-    color: var(--text-color-secondary);
-}
-.item-details span.item-name { /* Название */
-    font-weight: 600;
-    color: var(--text-color-primary);
-    font-size: 1em;
-}
-.item-details span.item-price { /* Цена */
-     font-weight: 500;
-     color: var(--color-success);
-}
-
-.item-actions { /* Кнопки в карточке */
-    margin-top: auto; /* Прижать кнопки к низу карточки */
-    padding-top: var(--padding-small);
-    width: 100%; /* Растянуть контейнер кнопок */
-    display: flex;
-    gap: 5px; /* Отступ между кнопками */
-}
-
-.item-actions button {
-    flex-grow: 1; /* Кнопки занимают равное место */
-    padding: 8px 10px; /* Кнопки поменьше */
-    font-size: 0.9em;
-}
-
-
-/* --- Стили для Рынка Криптовалют --- */
-#crypto-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-small);
-}
-
-.crypto-market-item {
-    background-color: var(--bg-color-medium);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-base);
-    padding: var(--padding-small);
-    display: flex;
-    flex-wrap: wrap; /* Перенос элементов на моб */
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.crypto-market-item span {
-    flex-basis: auto; /* Базовая ширина авто */
-}
-
-.crypto-market-item .crypto-name {
-    font-weight: 600;
-    flex-basis: 80px; /* Фикс ширина для названия */
-}
-
-.crypto-market-item .rate {
-    font-weight: 500;
-    flex-grow: 1; /* Занять доступное место */
-    text-align: right;
-}
-
-.crypto-market-item .change {
-    font-size: 0.85em;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: 5px;
-    min-width: 60px; /* Мин ширина для изменения */
-    text-align: center;
-}
-
-.crypto-market-item .change.positive {
-    background-color: rgba(var(--color-success), 0.2);
-    color: var(--color-success);
-}
-
-.crypto-market-item .change.negative {
-    background-color: rgba(var(--color-danger), 0.2);
-    color: var(--color-danger);
-}
-
-.crypto-market-item input[type="number"] {
-    max-width: 120px; /* Ограничить ширину поля ввода */
-    margin: 0 5px;
-    padding: 8px; /* Поменьше паддинг */
-    flex-grow: 1; /* Растянуть на мал экранах */
-}
-
-.crypto-market-item button {
-    padding: 8px 12px; /* Кнопки поменьше */
-    font-size: 0.9em;
-    flex-shrink: 0; /* Не сжимать кнопку */
-}
-
-.market-chart {
-    margin-top: var(--padding-base);
-    background-color: var(--bg-color-medium);
-    padding: var(--padding-base);
-    border-radius: var(--border-radius-base);
-    min-height: 150px; /* Минимальная высота для графика */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color-secondary);
-}
-
-
-/* --- Стили для Табов (Рынок Б/У) --- */
-.market-tabs {
-    display: flex;
-    margin-bottom: var(--padding-base);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.market-tabs .tab-btn {
-    flex-grow: 1;
-    padding: 10px 15px;
-    background: none;
-    border: none;
-    color: var(--text-color-secondary);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    font-size: 1em;
-    text-align: center;
-}
-
-.market-tabs .tab-btn:hover {
-    color: var(--text-color-primary);
-}
-
-.market-tabs .tab-btn.active {
-    color: var(--accent-color-primary);
-    border-bottom-color: var(--accent-color-primary);
-}
-
-.market-tab {
-    display: none; /* Скрываем табы по умолчанию */
-}
-.market-tab.active {
-    display: block; /* Показываем активный таб */
-}
-
-
-/* --- Админ Панель --- */
-.admin-panel {
-    /* Можно добавить стили для фона или рамки админки */
-}
-
-#admin-content {
-    display: none; /* Скрыт по умолчанию */
-}
-.admin-panel.logged-in #admin-content {
-    display: block; /* Показываем контент после логина */
-}
-.admin-panel.logged-in #admin-login-form {
-    display: none; /* Скрываем форму логина */
-}
-
-#add-gpu-form {
-    background-color: var(--bg-color-medium);
-    padding: var(--padding-base);
-    border-radius: var(--border-radius-base);
-    border: 1px solid var(--border-color);
-}
-
-#add-gpu-form input {
-    margin-bottom: var(--padding-small); /* Меньше отступ в форме */
-}
-
-#admin-logout-button {
-    margin-top: var(--padding-base);
-    background-color: var(--color-danger);
-}
-#admin-logout-button:hover {
-    background-color: darken(var(--color-danger), 10%);
-}
-
-/* --- Медиа-запросы для адаптивности (Пример) --- */
-@media (max-width: 600px) {
-    body { font-size: 14px; } /* Уменьшаем шрифт на маленьких экранах */
-    .header .balances, .header .farm-stats { font-size: 0.8em; }
-    h2 { font-size: 1.2em; }
-    .navigation button { font-size: 0.7em; }
-    .item-list { grid-template-columns: 1fr; } /* Одна колонка на маленьких экранах */
-    .crypto-market-item { flex-direction: column; align-items: stretch; } /* Элементы крипторынка в столбик */
-    .crypto-market-item .rate { text-align: left; }
-    .crypto-market-item input[type="number"] { max-width: none; width: 100%; } /* Поле ввода на всю ширину */
+.history-item:hover, #custom-models-section .model-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
