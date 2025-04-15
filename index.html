@@ -1,162 +1,61 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Chat</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #111;
-      color: white;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      background-color: #222;
-    }
-    .title {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .chat-container {
-      padding: 2rem;
-    }
-    .greeting {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-    }
-    .options button {
-      background: #333;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      margin: 0.3rem;
-      border-radius: 0.5rem;
-      color: white;
-      cursor: pointer;
-    }
-    .chat-log {
-      margin-top: 1rem;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    .chat-message {
-      margin: 0.5rem 0;
-    }
-    .chat-message.user {
-      text-align: right;
-      color: #0f0;
-    }
-    .chat-message.ai {
-      text-align: left;
-      color: #0ff;
-    }
-    .chat-box {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #222;
-      padding: 1rem;
-      display: flex;
-      gap: 0.5rem;
-    }
-    .chat-box input {
-      flex: 1;
-      padding: 0.8rem;
-      border-radius: 0.5rem;
-      border: none;
-      outline: none;
-    }
-    .chat-box button {
-      padding: 0.8rem 1.2rem;
-      border: none;
-      background: #444;
-      color: white;
-      border-radius: 0.5rem;
-      cursor: pointer;
-    }
-    select {
-      background-color: #333;
-      color: white;
-      border: none;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <!-- Подключение Tailwind CSS через Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключение своих стилей (если понадобятся) -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключение скрипта -->
+    <script src="script.js" defer></script>
 </head>
-<body>
-  <header>
-    <div class="title">AI Chat</div>
-    <select id="model">
-      <option value="openai/gpt-4o">GPT-4o</option>
-      <option value="grok-3">Grok-3</option>
-      <option value="grok-3-mini">Grok-3 Mini</option>
-    </select>
-  </header>
-  <div class="chat-container">
-    <div class="greeting">Good morning, Gl1ch.<br>How can I help you today?</div>
-    <div class="options">
-      <button onclick="sendPreset('Do some research')">Research</button>
-      <button onclick="sendPreset('Create an image')">Create images</button>
-      <button onclick="sendPreset('How to...')">How to</button>
-      <button onclick="sendPreset('Analyze this')">Analyze</button>
-      <button onclick="sendPreset('Act like a persona')">Personas</button>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen font-sans">
+
+    <div class="w-full max-w-2xl flex flex-col h-[80vh] bg-white shadow-lg rounded-lg overflow-hidden">
+
+        <!-- Область для сообщений чата -->
+        <div id="chatbox" class="flex-1 p-6 space-y-4 overflow-y-auto">
+            <!-- Сюда будут добавляться сообщения -->
+            <div class="text-center text-gray-500 text-sm">Начните диалог, введя сообщение ниже.</div>
+            <!-- Пример сообщения пользователя (для визуальной отладки, потом уберем) -->
+            <!--
+            <div class="flex justify-end">
+                <div class="bg-blue-500 text-white p-3 rounded-lg max-w-xs">
+                    Привет! Как дела?
+                </div>
+            </div>
+            -->
+            <!-- Пример сообщения AI (для визуальной отладки, потом уберем) -->
+            <!--
+            <div class="flex justify-start">
+                <div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-xs">
+                    Привет! Я AI, у меня все отлично. Чем могу помочь?
+                </div>
+            </div>
+            -->
+        </div>
+
+        <!-- Область ввода -->
+        <div id="input-area" class="p-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center space-x-2">
+                <textarea
+                    id="userInput"
+                    rows="1"
+                    placeholder="Введите ваше сообщение..."
+                    class="flex-1 p-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                ></textarea>
+                <button
+                    id="sendButton"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out disabled:opacity-50"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>
+                </button>
+            </div>
+        </div>
+
     </div>
-    <div class="chat-log" id="chat-log"></div>
-  </div>
-  <div class="chat-box">
-    <input type="text" id="user-input" placeholder="What do you want to know?">
-    <button onclick="sendMessage()">Send</button>
-  </div><script>
-const apiKey = "sk-oWHssHofTC2g291Qu6wY/EkYrwQEBjxay1XR1lMg3YD7dP2ci4pQBm3SP3VVv+r7o8ksDq2HdQELruTSmkTtzjiEUX+ysYtiLVbPULHp2gw=";
-const chatLog = document.getElementById("chat-log");
-const userInput = document.getElementById("user-input");
-const modelSelect = document.getElementById("model");
 
-function appendMessage(role, content) {
-  const message = document.createElement("div");
-  message.className = `chat-message ${role}`;
-  message.textContent = content;
-  chatLog.appendChild(message);
-  chatLog.scrollTop = chatLog.scrollHeight;
-}
-
-function sendPreset(text) {
-  userInput.value = text;
-  sendMessage();
-}
-
-async function sendMessage() {
-  const userText = userInput.value.trim();
-  if (!userText) return;
-  appendMessage("user", userText);
-  userInput.value = "";
-  const model = modelSelect.value;
-
-  try {
-    const response = await fetch("https://router.requesty.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [{ role: "user", content: userText }]
-      })
-    });
-
-    const data = await response.json();
-    if (data.choices && data.choices.length > 0) {
-      appendMessage("ai", data.choices[0].message.content);
-    } else {
-      appendMessage("ai", "[No response received]");
-    }
-  } catch (error) {
-    appendMessage("ai", `[Error] ${error.message}`);
-  }
-}
-</script></body>
+</body>
 </html>
